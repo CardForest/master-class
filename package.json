@@ -1,0 +1,38 @@
+{
+  "name": "master-slave-class",
+  "version": "0.0.0",
+  "description": "JavaScript classes with an edge.",
+  "homepage": "https://github.com/CardForest/master-slave-class",
+  "author": {
+    "name": "Amit Portnoy",
+    "email": "amit.portnoy@gmail.com",
+    "url": "https://github.com/amitport"
+  },
+  "repository": "cardforest/master-slave-class",
+  "license": "AGPL",
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "master-slave-class",
+    "object",
+    "class",
+    "model"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-cli": "^1.12.0",
+    "jshint-stylish": "^1.0.1",
+    "load-grunt-tasks": "^3.1.0",
+    "time-grunt": "^1.1.0"
+  },
+  "scripts": {
+    "test": "grunt",
+    "browser": "browserify index.js > browser.js"
+  }
+}
