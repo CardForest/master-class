@@ -8,7 +8,7 @@
     "email": "amit.portnoy@gmail.com",
     "url": "https://github.com/amitport"
   },
-  "repository": "cardforest/master-slave-class",
+  "repository": "https://github.com/CardForest/master-slave-class.git",
   "license": "AGPL",
   "files": [
     "index.js"
