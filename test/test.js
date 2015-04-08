@@ -1,10 +1,25 @@
 'use strict';
 var assert = require('assert');
-var masterSlaveClass = require('../');
 
-describe('master-slave-class node module', function () {
-  it('must have at least one test', function () {
-    masterSlaveClass();
-    assert(false, 'I was too lazy to write any tests. Shame on me.');
+var MS = require('..');
+
+describe('property containers', function () {
+  it('allows primitive properties', function () {
+    var o = MS.Object(null,
+      {
+      propSpecs: {
+        n: {type: MS.Number},
+        s: {type: MS.String},
+        b: {type: MS.Boolean}
+      }
+    },
+    [],
+    {set: function (cb){cb();}}
+    );
+
+    assert.strictEqual(o.n, 0);
+    assert.strictEqual(o.s, '');
+    assert.strictEqual(o.b, false);
   });
+
 });

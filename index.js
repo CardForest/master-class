@@ -1,4 +1,10 @@
 'use strict';
-module.exports = function (str) {
-  console.log(str || 'Rainbow');
+
+var primitives = require('./lib/types/primitives');
+module.exports = {
+  Object: require('./lib/types/object'),
+  Array: require('./lib/types/array'),
+  Number: primitives.Number,
+  String: primitives.String,
+  Boolean: primitives.Boolean
 };
