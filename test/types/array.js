@@ -39,7 +39,7 @@ describe('array', function () {
     assert.strictEqual(arr[2].n, 3);
   });
 
-  it('allows nested FixedArray', function () {
+  it('allows nested array', function () {
     var arr = M.Array({
       defaultLength: 4,
       elem: M.Array({
@@ -54,6 +54,30 @@ describe('array', function () {
 
     arr[0][1] = 3;
     assert.strictEqual(arr[0][1], 3);
+  });
+
+  it('can be set from a value on instance creation', function () {
+    var arr = M.Array({
+      defaultLength: 2,
+      elem: M.Array({
+        defaultLength: 2,
+        elem: M.Number()
+      })
+    }).createInstance([[1, 2], [3, 4]]);
+
+    assert.deepEqual(arr, [[1, 2], [3, 4]]);
+  });
+
+  it('can be set length on instance creation', function () {
+    var arr = M.Array({
+      defaultLength: 2,
+      elem: M.Array({
+        defaultLength: 2,
+        elem: M.Number()
+      })
+    }).createInstance({length: 1});
+
+    assert.deepEqual(arr, [[0, 0]]);
   });
 
   it('properties are frozen', function () {

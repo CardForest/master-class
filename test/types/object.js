@@ -45,6 +45,24 @@ describe('object', function () {
     assert.strictEqual(o.o.n, 3);
   });
 
+  it('can be set from a value on instance creation', function () {
+    var o = M.Object({
+      props: {
+        o: M.Object({
+          props: {
+            n: M.Number(),
+            notSet: M.Number({initialValue: 2})
+          }
+        }),
+        n: M.Number({initialValue: 5})
+      }
+    }).createInstance({o: {n: 3}, n: 4});
+
+    assert.strictEqual(o.n, 4);
+    assert.strictEqual(o.o.n, 3);
+    assert.strictEqual(o.o.notSet, 2);
+  });
+
   it('properties are frozen', function () {
     var o = M.Object({
       props: {
