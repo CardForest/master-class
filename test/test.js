@@ -1,24 +1,32 @@
 'use strict';
 var assert = require('assert');
 
-var MS = require('..');
+var M = require('..');
 
 describe('property containers', function () {
   it('allows primitive properties', function () {
-    var o = MS.Object(null,
-      {
-      propSpecs: {
-        n: {type: MS.Number},
-        s: {type: MS.String},
-        b: {type: MS.Boolean}
-      }
-    },
-    [],
-    {set: function (cb){cb();}}
-    );
+    var o =
+      M.Object({
+        props: {
+          n: M.Number({initialValue: 3}),
+          s: M.Object({
+            props: {
+              n: M.Number({initialValue: 4}),
+              s: M.String(),
+              b: M.Boolean()
+            }
+          }),
+          b: M.Boolean()
+        }
+      })
+        .instantiate(undefined, [], {
+          set: function (cb) {
+            cb();
+          }
+        });
 
-    assert.strictEqual(o.n, 0);
-    assert.strictEqual(o.s, '');
+    assert.strictEqual(o.n, 3);
+    assert.strictEqual(o.s.n, 4);
     assert.strictEqual(o.b, false);
   });
 
