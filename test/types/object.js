@@ -3,12 +3,6 @@
 var assert = require('assert');
 var M = require('../..');
 
-var noOpControl = {
-  set: function (cb) {
-    cb();
-  }
-};
-
 describe('object', function () {
   it('allows primitive properties', function () {
     var o = M.Object({
@@ -17,7 +11,7 @@ describe('object', function () {
         s: M.String(),
         b: M.Boolean()
       }
-    }).createInstance(null, [], noOpControl);
+    }).createInstance();
 
     assert.strictEqual(o.n, 0);
     assert.strictEqual(o.s, '');
@@ -42,7 +36,7 @@ describe('object', function () {
           }
         })
       }
-    }).createInstance(null, [], noOpControl);
+    }).createInstance();
 
     assert(o.hasOwnProperty('o'));
     assert.strictEqual(o.o.n, 0);
@@ -56,7 +50,7 @@ describe('object', function () {
       props: {
         n: M.Number()
       }
-    }).createInstance(null, [], noOpControl);
+    }).createInstance();
 
     assert.throws(function() {o.s = 'should throw';});
     assert.throws(function() {delete o.n;});
@@ -71,7 +65,7 @@ describe('object', function () {
           }
         })
       }
-    }).createInstance(null, [], noOpControl);
+    }).createInstance();
 
     assert.throws(function() {o.o = {n: 3};});
   });
@@ -81,7 +75,7 @@ describe('object', function () {
       props: {
         n: M.Number()
       }
-    }).createInstance(null, [], noOpControl);
+    }).createInstance();
 
     assert.throws(function() {o.n = 'should throw';});
   });
