@@ -6,7 +6,7 @@ var M = require('..');
 describe('property containers', function () {
   it('allows primitive properties', function () {
     var o =
-      M.Object({
+      M({
         props: {
           n: M.Number({initialValue: 3}),
           s: M.Object({
@@ -18,12 +18,7 @@ describe('property containers', function () {
           }),
           b: M.Boolean()
         }
-      })
-        .instantiate(undefined, [], {
-          set: function (cb) {
-            cb();
-          }
-        });
+      }).createInstance();
 
     assert.strictEqual(o.n, 3);
     assert.strictEqual(o.s.n, 4);
