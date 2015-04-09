@@ -2,19 +2,19 @@
   "name": "master-class",
   "version": "0.0.1",
   "description": "JavaScript classes with an edge.",
-  "homepage": "https://github.com/CardForest/master-slave-class",
+  "homepage": "https://github.com/CardForest/master-class",
   "author": {
     "name": "Amit Portnoy",
     "email": "amit.portnoy@gmail.com",
     "url": "https://github.com/amitport"
   },
-  "repository": "https://github.com/CardForest/master-slave-class.git",
+  "repository": "https://github.com/CardForest/master-class.git",
   "license": "AGPL",
   "files": [
     "index.js"
   ],
   "keywords": [
-    "master-slave-class",
+    "master-class",
     "object",
     "class",
     "model"

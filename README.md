@@ -6,16 +6,15 @@
 ## Install
 
 ```sh
-$ npm install --save master-slave-class
+$ npm install --save master-class
 ```
 
 
 ## Usage
 
 ```js
-var masterSlaveClass = require('master-slave-class');
+var masterClass = require('master-class');
 
-masterSlaveClass('Rainbow');
 ```
 
 ```sh
@@ -28,9 +27,9 @@ $ npm run browser
 
 AGPL © [Amit Portnoy](https://github.com/amitport)
 
-[npm-image]: https://img.shields.io/npm/v/master-slave-class.svg?style=flat
-[npm-url]: https://npmjs.org/package/master-slave-class
-[travis-image]: https://travis-ci.org/CardForest/master-slave-class.svg?branch=master
-[travis-url]: https://travis-ci.org/CardForest/master-slave-class
-[daviddm-image]: https://david-dm.org/CardForest/master-slave-class.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/CardForest/master-slave-class
+[npm-image]: https://img.shields.io/npm/v/master-class.svg?style=flat
+[npm-url]: https://npmjs.org/package/master-class
+[travis-image]: https://travis-ci.org/CardForest/master-class.svg?branch=master
+[travis-url]: https://travis-ci.org/CardForest/master-class
+[daviddm-image]: https://david-dm.org/CardForest/master-class.svg?theme=shields.io
+[daviddm-url]: https://david-dm.org/CardForest/master-class
