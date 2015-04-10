@@ -173,4 +173,74 @@ describe('snapshot', function () {
     assert.deepEqual(s, {n: 5, s: 'test', b: true});
   });
 
+  it('supports TBS use case', function () {
+    var opt = {
+      props: {
+        secretObject: M.Object({
+          props: {
+            s: M.String({initialValue: 'secret'})
+          },
+          scope: 'master'
+        }),
+        secretArray: M.Array({
+          defaultLength: 2,
+          elem:  M.String({initialValue: 'secret'}),
+          scope: 'master'
+        }),
+        notSecret: M.String({initialValue: 'notSecret'}),
+        players: M.Array({
+          defaultLength: 2,
+          elem: M.Object({
+            props: {
+              secret: M.String({initialValue: 'secret', scope: 'player'}),
+              notSecret: M.String({initialValue: 'notSecret'})
+            }
+          })
+        })
+      }
+    };
+
+    var o = M(opt).createInstance();
+
+    var playerScopeMapper = function (playerIdx) {
+      return function (opt, instance, keyPath, next) {
+        if (opt.scope === 'master') {
+          return 'hidden';
+        } else if (opt.scope === 'player') {
+          if (keyPath.length < 2 || keyPath[0] !== 'players') {
+            throw Error('the \'player\' scope must be used inside of the \'players\' array');
+          } else {
+            if (keyPath[1] !== playerIdx) {
+              return 'hidden';
+            }
+          }
+        }
+        return next();
+      };
+    };
+
+    var player0Snapshot = o.snapshot(playerScopeMapper(0));
+    var player1Snapshot = o.snapshot(playerScopeMapper(1));
+
+    assert.deepEqual(player0Snapshot, {
+        secretObject: 'hidden',
+        secretArray: 'hidden',
+        notSecret: 'notSecret',
+        players: [
+          {secret: 'secret', notSecret: 'notSecret'},
+          {notSecret: 'notSecret', secret: 'hidden'}
+        ]}
+    );
+    assert.deepEqual(player1Snapshot, {
+        secretObject: 'hidden',
+        secretArray: 'hidden',
+        notSecret: 'notSecret',
+        players: [
+          {secret: 'hidden', notSecret: 'notSecret'},
+          {notSecret: 'notSecret', secret: 'secret'}
+        ]}
+    );
+    assert.deepEqual(M(opt).createInstance(player0Snapshot), player0Snapshot);
+  });
+
 });
