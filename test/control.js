@@ -46,7 +46,30 @@ describe('control', function () {
     o.o.n = 6;
 
     assert.strictEqual(changeListenerSpy.callCount, 2);
-    assert.deepEqual(changeListenerSpy.firstCall.args, ['setValue', {newValue: 4, keyPath: [], key: 'n'}]);
-    assert.deepEqual(changeListenerSpy.secondCall.args, ['setValue', {newValue: 6, keyPath: ['o'], key: 'n'}]);
+    assert.deepEqual(changeListenerSpy.firstCall.args, ['setValue', {newValue: 4, trgKeyPath: [], key: 'n'}]);
+    assert.deepEqual(changeListenerSpy.secondCall.args, ['setValue', {newValue: 6, trgKeyPath: ['o'], key: 'n'}]);
+  });
+
+  it('can override mutators', function () {
+    var mutatorToWrap = function(x) {
+      this.n = this.n + x;
+    };
+
+    var onMutatorCallSpy = sinon.spy(function (keyPath, args, mutator) {
+      mutator.apply(this, args); // add 3 to n
+      return this.n += args[0] + 4; // add another using the same argument as the original mutator and another 4
+    });
+
+    var o = M({
+      props: {
+        n: M.Number(),
+        m: M.Mutator(mutatorToWrap)
+      }
+    }).createInstance(null, {onMutatorCall: onMutatorCallSpy});
+
+    assert.strictEqual(o.m(3), 10);
+    assert.strictEqual(o.n, 10);
+    assert(onMutatorCallSpy.calledOnce);
+    assert.deepEqual(onMutatorCallSpy.firstCall.args, [[ 'm' ], [ 3 ], mutatorToWrap]);
   });
 });
