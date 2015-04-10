@@ -11,7 +11,8 @@
   "repository": "https://github.com/CardForest/master-class.git",
   "license": "AGPL",
   "files": [
-    "index.js"
+    "index.js",
+    "lib"
   ],
   "keywords": [
     "master-class",
