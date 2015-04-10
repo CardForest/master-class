@@ -162,11 +162,11 @@ describe('snapshot', function () {
         }
       }).createInstance();
 
-    var s = o.snapshot(function (opt, instance, keyPath, next) {
+    var s = o.snapshot(function (opt, instance, keyPath, snapshotFn) {
       if (keyPath[0] === 'n') {
         return 5;
       } else {
-        return next();
+        return snapshotFn();
       }
     });
 
@@ -203,7 +203,7 @@ describe('snapshot', function () {
     var o = M(opt).createInstance();
 
     var playerScopeMapper = function (playerIdx) {
-      return function (opt, instance, keyPath, next) {
+      return function (opt, instance, keyPath, snapshotFn) {
         if (opt.scope === 'master') {
           return 'hidden';
         } else if (opt.scope === 'player') {
@@ -215,7 +215,7 @@ describe('snapshot', function () {
             }
           }
         }
-        return next();
+        return snapshotFn();
       };
     };
 
