@@ -30,6 +30,39 @@ describe('ref', function () {
     assert.strictEqual(o.r, o.o);
   });
 
+  it('links work transitively', function () {
+    var opt = {
+      props: {
+        r1: M.Ref(),
+        r2: M.Ref(),
+        o: M.Object({
+          props: {
+            n: M.Number()
+          }
+        })
+      }
+    };
+
+    var o = M(opt).createInstance();
+
+    o.r2 = o.r1 = o.o;
+
+    o.o.n = 3;
+    assert.strictEqual(o.r1.n, 3);
+    assert.strictEqual(o.r2.n, 3);
+
+    o.r1.n = 2;
+    assert.strictEqual(o.o.n, 2);
+    assert.strictEqual(o.r2.n, 2);
+
+    o.r2.n = 1;
+    assert.strictEqual(o.o.n, 1);
+    assert.strictEqual(o.r1.n, 1);
+
+    assert.strictEqual(o.o, o.r1);
+    assert.strictEqual(o.r1, o.r2);
+  });
+
   it('links survive snapshots', function () {
     var opt = {
       props: {
@@ -42,21 +75,55 @@ describe('ref', function () {
       }
     };
 
-    var o = M(opt).createInstance();
+    var origin = M(opt).createInstance();
+    origin.r = origin.o;
+    origin.o.n = 4;
 
-    o.r = o.o;
+    var o = M(opt).createInstance(origin.snapshot());
+
+    assert.deepEqual(o, origin);
+
+    assert.strictEqual(o.r.n, 4);
+
+    o.r.n = 5;
+    assert.strictEqual(o.o.n, 5);
+
     assert.strictEqual(o.r, o.o);
+  });
 
-    var oCopy = M(opt).createInstance(o.snapshot());
+  it('transitive links survive snapshots ', function () {
+    var opt = {
+      props: {
+        r1: M.Ref(),
+        r2: M.Ref(),
+        o: M.Object({
+          props: {
+            n: M.Number()
+          }
+        })
+      }
+    };
 
-    assert.deepEqual(oCopy, o);
+    var origin = M(opt).createInstance();
+    origin.r2 = origin.r1 = origin.o;
+    origin.o.n = 3;
 
-    oCopy.o.n = 4;
-    assert.strictEqual(oCopy.r.n, 4);
+    var o = M(opt).createInstance(origin.snapshot());
 
-    oCopy.r.n = 5;
-    assert.strictEqual(oCopy.o.n, 5);
+    assert.deepEqual(o, origin);
 
-    assert.deepEqual(oCopy.r, oCopy.o);
+    assert.strictEqual(o.r1.n, 3);
+    assert.strictEqual(o.r2.n, 3);
+
+    o.r1.n = 2;
+    assert.strictEqual(o.o.n, 2);
+    assert.strictEqual(o.r2.n, 2);
+
+    o.r2.n = 1;
+    assert.strictEqual(o.o.n, 1);
+    assert.strictEqual(o.r1.n, 1);
+
+    assert.strictEqual(o.o, o.r1);
+    assert.strictEqual(o.r1, o.r2);
   });
 });
