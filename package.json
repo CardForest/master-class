@@ -22,6 +22,7 @@
   ],
   "dependencies": {
     "inherit-array": "^0.1.1",
+    "key-path": "^0.3.2",
     "lodash.defaults": "^3.1.1",
     "lodash.forown": "^3.0.2"
   },
