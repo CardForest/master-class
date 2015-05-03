@@ -46,8 +46,8 @@ describe('control', function () {
     o.o.n = 6;
 
     assert.strictEqual(changeListenerSpy.callCount, 2);
-    assert.deepEqual(changeListenerSpy.firstCall.args, ['setValue', {newValue: 4, trgKeyPath: [], key: 'n'}]);
-    assert.deepEqual(changeListenerSpy.secondCall.args, ['setValue', {newValue: 6, trgKeyPath: ['o'], key: 'n'}]);
+    assert.deepEqual(changeListenerSpy.firstCall.args, ['setValue', {newValue: 4, trgKeyPath: [], key: 'n'}, {initialValue: 3}]);
+    assert.deepEqual(changeListenerSpy.secondCall.args, ['setValue', {newValue: 6, trgKeyPath: ['o'], key: 'n'}, {initialValue: 5}]);
   });
 
   it('can override mutators', function () {
