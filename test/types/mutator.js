@@ -24,13 +24,13 @@ describe('mutator', function () {
     assert.strictEqual(o.n, 1);
   });
 
-  it('can receive a guard keyPath - which points to a value to verify before running', function () {
+  it('can be guarded by a function', function () {
     var o = M({
       props: {
         n: M.Number({initialValue: 5}),
         isNLessThan10: M.Getter(function () {return this.n < 10;}),
         m: M.Mutator({
-          guardKeyPath: ['isNLessThan10'],
+          guard: function () {return this.isNLessThan10;},
           fn: function(x){
             this.n = this.n + x;
           }
@@ -47,6 +47,5 @@ describe('mutator', function () {
     assert.throws(function () {
       o.m(3);
     });
-
   });
 });
