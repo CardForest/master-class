@@ -48,4 +48,22 @@ describe('mutator', function () {
       o.m(3);
     });
   });
+
+  it('guard cannot make changes', function () {
+    var o = M({
+      props: {
+        n: M.Number({initialValue: 5}),
+        m: M.Mutator({
+          guard: function () {return this.n++;},
+          fn: function(x){
+            this.n = this.n + x;
+          }
+        })
+      }
+    }).createInstance();
+
+    assert.throws(function () {
+      o.m(3);
+    });
+  });
 });
