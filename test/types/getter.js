@@ -77,4 +77,23 @@ describe('getter', function () {
 
     assert.throws(function() {o.g = function () {return 3;};});
   });
+
+  it('can access keyPath attribute', function () {
+    var o = M.Object({
+      props: {
+        arr: M.Array({
+          defaultLength: 4,
+          elem: M.Object({
+            props: {
+              idx: M.Getter(function() {
+                return this.keyPath[1];
+              })
+            }
+          })
+        })
+      }
+    }).createInstance();
+
+    assert.strictEqual(o.arr[2].idx, 2);
+  });
 });
