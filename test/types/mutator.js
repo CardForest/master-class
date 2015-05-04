@@ -66,4 +66,22 @@ describe('mutator', function () {
       o.m(3);
     });
   });
+
+  it('guards can be accessed through mutators', function () {
+    var o = M({
+      props: {
+        n: M.Number({initialValue: 5}),
+        m: M.Mutator({
+          guard: function () {return this.n === 5;},
+          fn: function(x){
+            this.n = this.n + x;
+          }
+        })
+      }
+    }).createInstance();
+
+    assert.strictEqual(o.m.guard, true);
+    o.n = 4;
+    assert.strictEqual(o.m.guard, false);
+  });
 });
