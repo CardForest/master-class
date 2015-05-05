@@ -72,4 +72,19 @@ describe('control', function () {
     assert(onMutatorCallSpy.calledOnce);
     assert.deepEqual(onMutatorCallSpy.firstCall.args, [[ 'm' ], [ 3 ], mutatorToWrap]);
   });
+
+  it('can override rootPropertyName', function () {
+    var o = M({
+      props: {
+        n: M.Number({initialValue: 1}),
+        o: M.Object({
+          props: {
+            n: M.Number({initialValue: 5})
+          }
+        })
+      }
+    }).createInstance(null, {rootPropertyName: 'head'});
+
+    assert.strictEqual(o.o.head.n, 1);
+  });
 });
