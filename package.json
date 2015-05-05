@@ -21,18 +21,18 @@
     "model"
   ],
   "dependencies": {
-    "inherit-array": "^0.1.1",
+    "inherit-array": "^0.1.2",
     "key-path": "^0.3.2",
     "lodash.defaults": "^3.1.1",
     "lodash.forown": "^3.0.2"
   },
   "devDependencies": {
-    "browserify": "^10.0.0",
+    "browserify": "^10.1.0",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.11.2",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-mocha-cli": "^1.13.0",
-    "jshint-stylish": "^1.0.1",
+    "jshint-stylish": "^1.0.2",
     "load-grunt-tasks": "^3.1.0",
     "sinon": "^1.14.1",
     "time-grunt": "^1.1.1"
