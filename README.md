@@ -131,7 +131,7 @@ var snapshotWithoutPlayerScope = instance.snapshot(
 // snapshotWithoutPlayerScope.players[ ].secret is always 'hidden'
 ```
 
-> Sorry, that's all the documentation for now (check out the tests for more), but trust me, this is worth looking into (and perhaps contribute to ;-) ).
+> Sorry, that's all the documentation for now (check out the tests for more), but trust me, this is worth looking into (and perhaps contributing to ;-) ).
 
 ## License
 
