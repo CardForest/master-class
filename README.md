@@ -75,10 +75,10 @@ instance.stage = 'end' // throws exception!
 control.isChangeAllowed = true 
 
 // it can listen to changes
-control.onChange: function(type, payload, factoryOpts){
-      if (type === 'setValue')
-        console.log(payload.trgKeyPath.join('.') + "'s '" + payload.key + "' property was set with " + payload.newValue);
-  }
+control.onChange: function(type, payload, factoryOpts) {
+  if (type === 'setValue')
+    console.log(payload.trgKeyPath.join('.') + "'s '" + payload.key + 
+                "' property was set with " + payload.newValue)
 }
 
 instance.stash.size = 2 // logs: "stash's 'size' property was set with 2"
@@ -108,7 +108,7 @@ var sameInstance = M(
 // and more importantly, instance.currentPlayer === instance.players[0] !
 
 // Additionally, the instance can receive a mapper-visitor function that lets us tap into it
- var snapshotWithoutPlayerScope = instance.snapshot(
+var snapshotWithoutPlayerScope = instance.snapshot(
   function (opt, instance, keyPath, snapshotFn) {
     if (opt.scope === 'player') {
       return 'hidden';
