@@ -109,7 +109,7 @@ this is useful when we make a snapshot of this instance
 ```js
 var snapshot = instance.snapshot()
 ```
-a snapshot is a plain js object that can be sent over the network
+a _snapshot_ is a plain js object that can be sent over the network
 and be used to retrieve the object state later
 ```js
 var instanceCopy = myFactory.createInstance(snapshot)
@@ -117,7 +117,7 @@ var instanceCopy = myFactory.createInstance(snapshot)
 now `instanceCopy` deep equals instance
 and more importantly, `instanceCopy.currentPlayer === instanceCopy.players[0]` !
 
-Additionally, the instance can receive a mapper-visitor function that lets us tap into it
+Additionally, the instance can receive a mapper-visitor function that lets us "tap" into it
 ```js
 var snapshotWithoutPlayerScope = instance.snapshot(
   function (opt, instance, keyPath, snapshotFn) {
