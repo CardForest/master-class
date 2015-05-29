@@ -15,7 +15,7 @@ $ npm install --save master-class
 ```js
 var M = require('master-class')
 
-var myClassOpts = {
+var myFactory = M({
   props: {
     stage: M.String(),
     stash: M.Object({
@@ -38,11 +38,11 @@ var myClassOpts = {
     }),
     currentPlayer: M.Ref()
   }
-}
+})
 
 var control = {};
   
-var instance = M(myClassOpts).createInstance(
+var instance = myFactory.createInstance(
   {stage: 'start'}, // initial value (or previous snapshot)
   control
 )
@@ -100,12 +100,9 @@ instance.currentPlayer = instance.players[0]
 var snapshot = instance.snapshot()
 // a snapshot is a plain js object that can be sent over the network
 // and be used to retrive the object state later
-var sameInstance = M(
-  myClassOpts, // we could use different opts to agument the behaviour
-  snapshot
-)
-// sameInstance deep equals instance
-// and more importantly, instance.currentPlayer === instance.players[0] !
+var instanceCopy = myFactory.createInstance(snapshot)
+// instanceCopy deep equals instance
+// and more importantly, instanceCopy.currentPlayer === instanceCopy.players[0] !
 
 // Additionally, the instance can receive a mapper-visitor function that lets us tap into it
 var snapshotWithoutPlayerScope = instance.snapshot(
