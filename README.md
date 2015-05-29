@@ -2,6 +2,7 @@
 
 > JavaScript classes with an edge.
 
+This is a wrapper around js objects that gives them some extra functionality. It's hard to group those features into one paragraph but the _Usage_ section below should demonstrate the interesting parts.
 
 ## Install
 
@@ -114,7 +115,7 @@ and be used to retrieve the object state later
 var instanceCopy = myFactory.createInstance(snapshot)
 ```
 now `instanceCopy` deep equals instance
-and more importantly, `instanceCopy.currentPlayer` === `instanceCopy.players[0]` !
+and more importantly, `instanceCopy.currentPlayer === instanceCopy.players[0]` !
 
 Additionally, the instance can receive a mapper-visitor function that lets us tap into it
 ```js
