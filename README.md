@@ -114,10 +114,10 @@ and be used to retrieve the object state later
 ```js
 var instanceCopy = myFactory.createInstance(snapshot)
 ```
-now `instanceCopy` deep equals instance
+now `instanceCopy` deep equals `instance`
 and more importantly, `instanceCopy.currentPlayer === instanceCopy.players[0]` !
 
-Additionally, the instance can receive a mapper-visitor function that lets us "tap" into it
+Additionally, the `snapshot` function can receive a mapper-visitor function that lets us "tap" into it
 ```js
 var snapshotWithoutPlayerScope = instance.snapshot(
   function (opt, instance, keyPath, snapshotFn) {
