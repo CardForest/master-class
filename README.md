@@ -46,8 +46,10 @@ var instance = myFactory.createInstance(
   {stage: 'start'}, // initial value (or previous snapshot)
   control
 )
+```
+`instance` is just normal object
 
-// instance is just normal object
+```js
 instance.players[1].bid = 2
 console.log(instance)
 // prints:
@@ -66,9 +68,10 @@ console.log(instance)
 //  }],
 //  currentPlayer: null
 //}
+```
+but the `control` object has control!
 
-// but the control object has control!
-
+```js
 // it can prevent changes
 control.isChangeAllowed = false 
 instance.stage = 'end' // throws exception!
@@ -93,18 +96,28 @@ control.onMutatorCall = function (keyPath, args, mutator) {
 }
 instance.stash.addSome(4) // we're OK => and stash.size is updated 9
 instance.stash.addSome(2) // throws error and stash.size is not updated
+```
 
-// M.Ref designates that the property references another object
+`M.Ref` designates that the property references another object
+
+```js 
 instance.currentPlayer = instance.players[0]
-// this is useful when we make a snapshot of this instance
-var snapshot = instance.snapshot()
-// a snapshot is a plain js object that can be sent over the network
-// and be used to retrive the object state later
-var instanceCopy = myFactory.createInstance(snapshot)
-// instanceCopy deep equals instance
-// and more importantly, instanceCopy.currentPlayer === instanceCopy.players[0] !
+```
+this is useful when we make a snapshot of this instance
 
-// Additionally, the instance can receive a mapper-visitor function that lets us tap into it
+```js
+var snapshot = instance.snapshot()
+```
+a snapshot is a plain js object that can be sent over the network
+and be used to retrieve the object state later
+```js
+var instanceCopy = myFactory.createInstance(snapshot)
+```
+now `instanceCopy` deep equals instance
+and more importantly, `instanceCopy.currentPlayer` === `instanceCopy.players[0]` !
+
+Additionally, the instance can receive a mapper-visitor function that lets us tap into it
+```js
 var snapshotWithoutPlayerScope = instance.snapshot(
   function (opt, instance, keyPath, snapshotFn) {
     if (opt.scope === 'player') {
@@ -117,7 +130,7 @@ var snapshotWithoutPlayerScope = instance.snapshot(
 // snapshotWithoutPlayerScope.players[ ].secret is always 'hidden'
 ```
 
-Sorry, that's all the documentation for now (check out the tests for more), but trust me, this is worth looking into (and perhaps contribute to ;-) ).
+> Sorry, that's all the documentation for now (check out the tests for more), but trust me, this is worth looking into (and perhaps contribute to ;-) ).
 
 ## License
 
