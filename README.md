@@ -13,7 +13,7 @@ $ npm install --save master-class
 ## Usage
 
 ```js
-var M = require('master-class');
+var M = require('master-class')
 
 var myClassOpts = {
   props: {
@@ -45,11 +45,11 @@ var control = {};
 var instance = M(myClassOpts).createInstance(
   {stage: 'start'}, // initial value (or previous snapshot)
   control
-);
+)
 
 // instance is just normal object
-instance.players[1].bid = 2;
-console.log(instance); 
+instance.players[1].bid = 2
+console.log(instance)
 // prints:
 //{
 //  stage: 'start',
@@ -67,7 +67,7 @@ console.log(instance);
 //  currentPlayer: null
 //}
 
-// but, the control object has control!
+// but the control object has control!
 
 // it can prevent changes
 control.isChangeAllowed = false 
@@ -79,7 +79,7 @@ control.onChange: function(type, payload, factoryOpts){
       if (type === 'setValue')
         console.log(payload.trgKeyPath.join('.') + "'s '" + payload.key + "' property was set with " + payload.newValue);
   }
-};
+}
 
 instance.stash.size = 2 // logs: "stash's 'size' property was set with 2"
 
@@ -88,21 +88,24 @@ control.onMutatorCall = function (keyPath, args, mutator) {
   if (this.size + args[0] <= 10) {
     mutator.apply(this, args)
   } else {
-    throw Error('oh no we passed 10');
+    throw Error('oh no we passed 10')
   }
-};
+}
 instance.stash.addSome(4) // we're OK => and stash.size is updated 9
 instance.stash.addSome(2) // throws error and stash.size is not updated
 
 // M.Ref designates that the property references another object
-instance.currentPlayer = instance.players[0];
-
-// this is useful, when we make a snapshot of this instance
+instance.currentPlayer = instance.players[0]
+// this is useful when we make a snapshot of this instance
 var snapshot = instance.snapshot()
-// a snapshot is a plain js object that can be sent over the network and be used to retrive the object state later
-var sameInstance = M(myClassOpts /* we could use different opts to agument the behaviour */, snapshot);
+// a snapshot is a plain js object that can be sent over the network
+// and be used to retrive the object state later
+var sameInstance = M(
+  myClassOpts, // we could use different opts to agument the behaviour
+  snapshot
+)
 // sameInstance deep equals instance
-// and more importantly instance.currentPlayer === instance.players[0] !
+// and more importantly, instance.currentPlayer === instance.players[0] !
 
 // Additionally, the instance can use a mapper-visitor function that lets do whatever you want
  var snapshotWithoutPlayerScope = instance.snapshot(
@@ -110,7 +113,7 @@ var sameInstance = M(myClassOpts /* we could use different opts to agument the b
     if (opt.scope === 'player') {
       return 'hidden';
     } else {
-      return snapshotFn();
+      return snapshotFn()
   }
 )
 
