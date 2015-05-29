@@ -107,7 +107,7 @@ var sameInstance = M(
 // sameInstance deep equals instance
 // and more importantly, instance.currentPlayer === instance.players[0] !
 
-// Additionally, the instance can use a mapper-visitor function that lets do whatever you want
+// Additionally, the instance can receive a mapper-visitor function that lets us tap into it
  var snapshotWithoutPlayerScope = instance.snapshot(
   function (opt, instance, keyPath, snapshotFn) {
     if (opt.scope === 'player') {
