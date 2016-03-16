@@ -1,6 +1,6 @@
 {
   "name": "master-class",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "JavaScript classes with an edge.",
   "homepage": "https://github.com/CardForest/master-class",
   "author": {
@@ -44,7 +44,6 @@
     "mocha": "mocha test/**/*.js --reporter spec",
     "lint": "jshint .",
     "browserify": "browserify index.js -t [ babelify ] > browser.js",
-
     "pretest": "npm run lint",
     "test": "npm run mocha & npm run karma"
   },
