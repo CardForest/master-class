@@ -46,8 +46,7 @@
     "browserify": "browserify index.js -t [ babelify ] > browser.js",
 
     "pretest": "npm run lint",
-    "test": "npm run mocha & npm run karma",
-    "prepublish": "npm run browserify"
+    "test": "npm run mocha & npm run karma"
   },
   "engines": {
     "node": "^5.8.0"
