@@ -40,7 +40,9 @@ describe('control', function () {
             }
           })
         }
-      }).createInstance(null, {onChange: changeListenerSpy});
+      }).createInstance(null);
+
+    o.control.on('change', changeListenerSpy);
 
     o.n = 4;
     o.o.n = 6;
