@@ -22,7 +22,8 @@
   ],
   "dependencies": {
     "key-path": "^0.3.2",
-    "lodash.forown": "^4.0.1"
+    "lodash.forown": "^4.0.1",
+    "object-assign": "^4.0.1"
   },
   "devDependencies": {
     "babel": "^6.5.2",
