@@ -9,7 +9,7 @@ describe('state', function () {
       props: {
         state: M.State([
           {
-            value: M.Object({
+            delegate: M.Object({
               props: {
                 n: M.Number({initialValue: 3})
               }
@@ -27,14 +27,14 @@ describe('state', function () {
       props: {
         state: M.State([
           {
-            value: M.Object({
+            delegate: M.Object({
               props: {
                 n: M.Number({initialValue: 3})
               }
             })
           },
           {
-            value: M.Object({
+            delegate: M.Object({
               props: {
                 m: M.Number({initialValue: 1})
               }
@@ -54,16 +54,20 @@ describe('state', function () {
         flag: M.Boolean(),
         state: M.State([
           {
-            when(root) {return root.flag;},
-            value: M.Object({
+            when() {
+              return this.root.flag;
+            },
+            delegate: M.Object({
               props: {
                 n: M.Number({initialValue: 3})
               }
             })
           },
           {
-            when(root) {return !root.flag;},
-            value: M.Object({
+            when() {
+              return !this.root.flag;
+            },
+            delegate: M.Object({
               props: {
                 m: M.Number({initialValue: 1})
               }
@@ -87,14 +91,14 @@ describe('state', function () {
       props: {
         state: M.State([
           {
-            value: M.Object({
+            delegate: M.Object({
               props: {
                 n: M.Number({initialValue: 3})
               }
             })
           },
           {
-            value: M.Object({
+            delegate: M.Object({
               props: {
                 m: M.Number({initialValue: 1})
               }
@@ -107,5 +111,133 @@ describe('state', function () {
     var oCopy = M(opt).createInstance(o.snapshot());
 
     assert.deepEqual(oCopy, o);
+  });
+
+  describe('sub-state', function () {
+    it('merges with parent', function () {
+      var o = M({
+        props: {
+          state: M.State([
+            {
+              delegate: M.Object({
+                props: {
+                  n: M.Number({initialValue: 3})
+                }
+              }),
+              subState: [{
+                delegate: M.Object({
+                  props: {
+                    m: M.Number({initialValue: 5})
+                  }
+                })
+              }]
+            }
+          ])
+        }
+      }).createInstance();
+
+      assert.strictEqual(o.state.n, 3);
+      assert.strictEqual(o.state.m, 5);
+    });
+
+    it('overrides parent state', function () {
+      var o = M({
+        props: {
+          state: M.State([
+            {
+              delegate: M.Object({
+                props: {
+                  n: M.Number({initialValue: 3})
+                }
+              }),
+              subState: [{
+                delegate: M.Object({
+                  props: {
+                    n: M.Number({initialValue: 5})
+                  }
+                })
+              }]
+            }
+          ])
+        }
+      }).createInstance();
+
+      assert.strictEqual(o.state.n, 5);
+    });
+
+    it('respects predicate', function () {
+      var o = M({
+        props: {
+          flag: M.Boolean(),
+          state: M.State([
+            {
+              delegate: M.Object({
+                props: {
+                  n: M.Number({initialValue: 3})
+                }
+              }),
+              subState: [{
+                when() {
+                  return this.root.flag;
+                },
+                delegate: M.Object({
+                  props: {
+                    m: M.Number({initialValue: 5})
+                  }
+                })
+              }]
+            }
+          ])
+        }
+      }).createInstance();
+
+      assert.strictEqual(o.state.m, undefined);
+      o.flag = true;
+      assert.strictEqual(o.state.m, 5);
+    });
+
+    it('respects parent predicate', function () {
+      var o = M({
+        props: {
+          flag: M.Boolean(),
+          state: M.State([
+            {
+              when() {
+                return this.root.flag;
+              },
+              delegate: M.Object({
+                props: {
+                  n: M.Number({initialValue: 3}),
+                  flag2: M.Boolean()
+                }
+              }),
+              subState: [{
+                when() {
+                  return this.flag2;
+                },
+                delegate: M.Object({
+                  props: {
+                    m: M.Number({initialValue: 5})
+                  }
+                })
+              }]
+            }
+          ])
+        }
+      }).createInstance();
+
+      assert.strictEqual(o.state.n, undefined);
+      assert.strictEqual(o.state.m, undefined);
+      o.flag = true;
+      assert.strictEqual(o.state.n, 3);
+      assert.strictEqual(o.state.m, undefined);
+      o.state.flag2 = true;
+      assert.strictEqual(o.state.n, 3);
+      assert.strictEqual(o.state.m, 5);
+      o.state.flag2 = false;
+      assert.strictEqual(o.state.n, 3);
+      assert.strictEqual(o.state.m, undefined);
+    });
+
   });
 });

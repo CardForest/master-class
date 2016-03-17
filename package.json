@@ -22,7 +22,6 @@
   ],
   "dependencies": {
     "key-path": "^0.3.2",
-    "lodash.defaults": "^4.0.1",
     "lodash.forown": "^4.0.1"
   },
   "devDependencies": {
@@ -44,7 +43,6 @@
     "mocha": "mocha test/**/*.js",
     "lint": "jshint .",
     "browserify": "browserify index.js -t [ babelify ] > browser.js",
-
     "pretest": "npm run lint",
     "test": "npm run mocha & npm run karma"
   },
