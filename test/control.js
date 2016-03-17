@@ -27,6 +27,8 @@ describe('control', function () {
 
     assert.throws(function() {o.o.n = 6;});
     assert.strictEqual(o.o.n, 5);
+    assert.throws(function() {o.o = {n: 6};});
+    assert.strictEqual(o.o.n, 5);
   });
 
   it('listens to change events', function () {

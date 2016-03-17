@@ -74,7 +74,7 @@ describe('object', function () {
     assert.throws(function() {delete o.n;});
   });
 
-  it('disallows assignment of nested objects', function () {
+  it('allows assignment of nested objects', function () {
     var o = M.Object({
       props: {
         o: M.Object({
@@ -85,7 +85,9 @@ describe('object', function () {
       }
     }).createInstance();
 
-    assert.throws(function() {o.o = {n: 3};});
+    o.o = {n: 3};
+
+    assert.deepEqual(o, {o: {n: 3}});
   });
 
   it('throws exception on assignment of incorrect primitive type', function () {
