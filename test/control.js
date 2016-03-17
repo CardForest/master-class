@@ -17,7 +17,9 @@ describe('control', function () {
             }
           })
         }
-      }).createInstance(null, {isChangeAllowed: false});
+      }).createInstance();
+
+    o.control.isChangeAllowed = false;
 
 
     assert.throws(function() {o.n = 4;});
@@ -40,7 +42,7 @@ describe('control', function () {
             }
           })
         }
-      }).createInstance(null);
+      }).createInstance();
 
     o.control.on('change', changeListenerSpy);
 
@@ -57,26 +59,27 @@ describe('control', function () {
       this.n = this.n + x;
     };
 
-    var onMutatorCallSpy = sinon.spy(function (keyPath, args, mutator) {
-      mutator.apply(this, args); // add 3 to n
-      return this.n += args[0] + 4; // add another using the same argument as the original mutator and another 4
-    });
-
     var o = M({
       props: {
         n: M.Number(),
         m: M.Mutator(mutatorToWrap)
       }
-    }).createInstance(null, {onMutatorCall: onMutatorCallSpy});
+    }).createInstance();
+
+    o.control.onMutatorCall = sinon.spy(function (keyPath, args, mutator) {
+      mutator.apply(this, args); // add 3 to n
+      return this.n += args[0] + 4; // add another using the same argument as the original mutator and another 4
+    });
 
     assert.strictEqual(o.m(3), 10);
     assert.strictEqual(o.n, 10);
-    assert(onMutatorCallSpy.calledOnce);
-    assert.deepEqual(onMutatorCallSpy.firstCall.args, [[ 'm' ], [ 3 ], mutatorToWrap]);
+    assert(o.control.onMutatorCall.calledOnce);
+    assert.deepEqual(o.control.onMutatorCall.firstCall.args, [[ 'm' ], [ 3 ], mutatorToWrap]);
   });
 
   it('can override rootPropertyName', function () {
     var o = M({
+      rootPropertyName: 'head',
       props: {
         n: M.Number({initialValue: 1}),
         o: M.Object({
@@ -85,7 +88,7 @@ describe('control', function () {
           }
         })
       }
-    }).createInstance(null, {rootPropertyName: 'head'});
+    }).createInstance();
 
     assert.strictEqual(o.o.head.n, 1);
   });
