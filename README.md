@@ -102,7 +102,8 @@ assert.throws(() => {
 instance.currentPlayer = instance.players[0];
 // this is useful when we make a snapshot of this instance
 var snapshot = instance.snapshot();
-// a snapshot is a plain js object that can be sent over the network and be used to retrieve the object state later
+// a snapshot is a plain js object that can be sent over the network 
+// and be used to retrieve the object state later
 var instanceCopy = myFactory.createInstance(snapshot);
 //  now instanceCopy deep equals instance
 assert.deepEqual(instanceCopy, instance);
