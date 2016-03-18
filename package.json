@@ -26,9 +26,6 @@
     "object-assign": "^4.0.1"
   },
   "devDependencies": {
-    "babel": "^6.5.2",
-    "babel-preset-es2015": "^6.6.0",
-    "babelify": "^7.2.0",
     "browserify": "^13.0.0",
     "jshint": "^2.9.1",
     "karma": "^0.13.22",
@@ -43,7 +40,7 @@
     "karma": "karma start --browsers Firefox",
     "mocha": "mocha test/**/*.js",
     "lint": "jshint .",
-    "browserify": "browserify index.js -t [ babelify ] > browser.js",
+    "browserify": "browserify index.js > browser.js",
     "pretest": "npm run lint",
     "test": "npm run mocha & npm run karma"
   },

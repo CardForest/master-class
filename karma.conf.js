@@ -10,10 +10,6 @@ module.exports = function(config) {
     },
 
     singleRun: true,
-    autoWatch: false,
-
-    browserify: {
-      transform: [ 'babelify' ]
-    }
+    autoWatch: false
   });
 };
