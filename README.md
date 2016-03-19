@@ -16,23 +16,28 @@ $ npm install --save master-class
 
 ## Usage
 
+0. Import the library
 ```js
 const M = require('master-class');
 ```
 
+0. create a new class:
 ```js
-const MyMClass = M({
-  props: {
-    myString: M.String(),
-    myNumber: M.Number({initialValue: 5}),
-    mySubObject: M.Object({
-      props: {
-        subObjectBoolean: M.Boolean()
-      }
-    })
-  }
-});
+  const MyMClass = M({
+    props: {
+      myString: M.String(),
+      myNumber: M.Number({initialValue: 5}),
+      mySubObject: M.Object({
+        props: {
+          subObjectBoolean: M.Boolean()
+        }
+      })
+    }
+  });
+```
 
+
+```js
 const myInstance = new MyMClass(); // equivalent to MyMClass.createInstance();
 
 assert.deepEqual(myInstance, {
