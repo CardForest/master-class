@@ -69,7 +69,7 @@ or
   ```
 * **Reselect getters**— should use something like [redux's reselect](https://github.com/reactjs/reselect) instead of the current getters implementation.
 
-* **Angular-like digest loop and watch hooks** 
+* **Angular-like digest loop and watch hooks**— 
 
 * * **State transition hooks** 
 
