@@ -37,6 +37,9 @@ or
 
 ## <a name="Features"></a>Features
 
+* [Runtime Strict Typing](docs/strict-typing.md)
+* [Fine-grained change notification](docs/change notification.md)
+
 
 ## License
 
