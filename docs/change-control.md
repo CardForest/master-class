@@ -19,11 +19,12 @@ assert.throws(function() {myInstance.n = 4;});
 assert.equal(myInstance.n, 3);
 ```
 
-and we can listen to changes
+We can also use the `control` object to listen to changes
 
 ```js
 myInstance.control.on('change', 
   function (changeType, {newValue, trgKeyPath, key}, opt) {
-  
-})
+    // triggered on any direct or nested changes
+  }
+);
 ```
