@@ -1,6 +1,7 @@
 {
     "plugins": [
-        "github"
+        "github",
+        "edit-link"
     ],
     "pluginsConfig": {}
 }
