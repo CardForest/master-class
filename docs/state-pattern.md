@@ -1,6 +1,6 @@
 # The State Pattern
 
-First, if you are not familiar with this pattern I can recommend this [excellent article](http://gameprogrammingpatterns.com/state.html).
+First, if you are not familiar with this pattern, I recommend this [excellent article](http://gameprogrammingpatterns.com/state.html).
 
 Our Master-Class types include an `M.State` type. That type helps us turns objects into concurrent, hierarchical state machines.
 
