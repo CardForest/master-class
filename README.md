@@ -45,10 +45,28 @@ or
 ## Todos
 
 
-* **Syntactic sugar**— The current API is uniform, but not very flexible. There are many special cases where propery factories could be made simpler from the library user point of view. e.g., 
+* **Add syntactic sugar**— The current API is uniform, but there are many special cases in which it could be made simpler from the library user point of view. 
 
-  `M({num: Number, [{bool: Boolean}])`
-  instead of `M({props: {num: M.Number(), [{bool: M.Boolean()}]}})`
+  e.g., something like
+
+  `M({num: Number, arr: [{bool: Boolean}]})`
+  
+  instead of the current
+  
+  ```js
+  M({
+    props: {
+      num: M.Number(),
+      arr: M.Array({
+        elem: M({
+          props: {
+            bool: M.Boolean()
+          }
+        })
+      })
+    }
+  })
+  ```
 * 
 
 ## API Reference
