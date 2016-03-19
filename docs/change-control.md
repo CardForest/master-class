@@ -56,7 +56,7 @@ const myInstance = M({
 }).createInstance();
 ```
 
-Those methods can be overriden by the `control`'s `onMutatorCall` method
+Those methods can be overridden by the `control`'s `onMutatorCall` method
 
 ```js
 myInstance.control.onMutatorCall = 
