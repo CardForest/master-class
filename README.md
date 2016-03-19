@@ -45,7 +45,7 @@ or
 ## Roadmap
 
 
-* **Add syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
+* **Syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
 
   e.g., something like
 
@@ -67,11 +67,11 @@ or
     }
   })
   ```
-* **Reselect getters**— should use something like [redux's reselect](https://github.com/reactjs/reselect) instead of the current getters implementation.
+* **Reselect-like getters**— should use something like [redux's reselect](https://github.com/reactjs/reselect) instead of the current getters implementation.
 
-* **Angular-like digest loop and watch hooks**— 
+* **Angular-like digest cycle and watch hooks**— currently, there is one active watcher in `M.State`'s `when` option. We should introduce a generic mechanism.
 
-* * **State transition hooks** 
+* **State transition hooks**— should add `onEnter` and `onLeave` events.
 
 ## API Reference
 
