@@ -2,10 +2,10 @@
 
 > JavaScript classes with an edge.
 
+
+This is library provide an [ECMAScript 6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29) (i.e., a [Metaclass](https://en.wikipedia.org/wiki/Metaclass)), the instances of  a wrapper around js objects that gives them some extra functionality. It's hard to group those features into one paragraph but the _Usage_ section below should demonstrate the interesting parts.
+
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
-
-
-This is a wrapper around js objects that gives them some extra functionality. It's hard to group those features into one paragraph but the _Usage_ section below should demonstrate the interesting parts.
 
 ## Install
 
