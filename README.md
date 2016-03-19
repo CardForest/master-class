@@ -77,9 +77,9 @@ or
   ```
 * **Implement Angular-like [watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch) and [digest](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest)**
 
-* **Add state transition hooks**— that is, `onEnter` and `onLeave` events.
+* **Add state transition hooks**— e.g., `onEnter` and `onLeave` events.
 
-* **Consider integrating with [inversify](http://inversify.io/)**
+* **Consider integrating with [Inversify](http://inversify.io/)**
 
 * **Consider using [Redux](https://github.com/reactjs/redux)'s [reselect](https://github.com/reactjs/reselect) for getters**
 
