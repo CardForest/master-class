@@ -43,16 +43,17 @@ assert.deepEqual(myInstance.state, {n: 3, m: 5, s: ''})
 ```js
 const MyClass = M({
   props: {
-    flag1: M.Boolean(),
+    flag1: M.Boolean({initialValue: true}),
     state: M.State([
       {
+        when() {return this.flag2;}
         delegate: M({ // (1) first object type
           props: {
             n: M.Number({initialValue: 3})
           }
         }),
         subState: [{
-          when() {return this.flag2;}
+          when() {return this.root.flag1;}
           delegate: M({ // (1.1) first object type child
             props: {
               m: M.Number({initialValue: 5})
@@ -61,9 +62,9 @@ const MyClass = M({
         }]
       },
       {
-        when() {return this.root.flag1;}
         delegate: M({ // (2) second object type
           props: {
+            flag2: M.Boolean(),
             s: M.String()
           }
         })
@@ -72,6 +73,12 @@ const MyClass = M({
   }
 });
 const myInstance = new MyClass();
-assert.deepEqual(myInstance.state, {n: 3, m: 5, s: ''})
+assert.deepEqual(myInstance.state, {flag2: false, s: ''});
+```
+Note that `myInstance.state.m` property is not included, even though `this.root.flag1` is `true`. This is because its parent state is blocked on `this.flag2`. So if we just assign `myInstance.state.flag2 = true`, we'll get:
+
+```js
+assert.deepEqual(myInstance.state, 
+  {flag2: true, s: '', n: 3, m: 5});
 ```
 
