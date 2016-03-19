@@ -71,7 +71,7 @@ myInstance.m1(3);
 assert.equal(myInstance.n, 7);
 ```
 
-and be guarded by an [idempotent](https://en.wikipedia.org/wiki/Idempotence) function (assured internally by `control.isChangeAllowed`)
+and be guarded by an [idempotent](https://en.wikipedia.org/wiki/Idempotence) function (ensured internally by `control.isChangeAllowed`)
 
 ```js
 const myInstance = M({
