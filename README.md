@@ -40,7 +40,7 @@ or
 * [Run-time strict typing](docs/strict-typing.md)
 * [Fine-grained change control](docs/change-control.md)
 * [Serialization](docs/serialization.md)
-* [The State pattern](docs/state-pattern.md)
+* [The state pattern](docs/state-pattern.md)
 
 ## API
 
