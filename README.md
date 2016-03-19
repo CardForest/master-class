@@ -10,7 +10,7 @@ This is library provides a [class](https://developer.mozilla.org/en/docs/Web/Jav
 - Be efficiently stored
 - Keep precise track of their changes
 
- All which while feeling like plain javascript objects.
+ All which while feeling like plain JavaScript objects.
 
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
