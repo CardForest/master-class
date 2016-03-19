@@ -1,6 +1,6 @@
 # Strict Typing
 
-We can generate classes that enforce run-time type checks and prevent object extensions.
+We can generate classes that enforce run-time type checks and prevent object extensions
 
 ```js
 const MyClass = M({
@@ -21,7 +21,7 @@ const MyClass = M({
 const myInstance = new MyClass();
 ```
 
-Now `myInstance` is a normal javascript object
+Now `myInstance` is a normal JavaScript object
 
 ```js
 assert.deepEqual(myInstance, {
@@ -33,7 +33,7 @@ assert.deepEqual(myInstance, {
 });
 ```
 
-that prevents incorrect type assignments:
+that prevents incorrect type assignments
 
 ```js
 assert.throws(function() {
@@ -41,11 +41,10 @@ assert.throws(function() {
 });
 ```
 
-and object extensions:
+and object extensions
 
 ```js
 assert.throws(function() {
   myInstance.newProperty = 'will throw';
 });
 ```
-
