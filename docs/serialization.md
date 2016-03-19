@@ -39,17 +39,17 @@ assert.deepEquals(
 You can provide a `mapper` to override the snapshot process
 
 ```js
-  assert.deepEquals(
-    myInstance.snapshot(
-      function (opt, instance, keyPath, snapshotFn) {
-        if (keyPath[0] === 'n') {
-          return 5;
-        } else {
-          return snapshotFn();
-        }
+assert.deepEquals(
+  myInstance.snapshot(
+    function (opt, instance, keyPath, snapshotFn) {
+      if (keyPath[0] === 'n') {
+        return 5;
+      } else {
+        return snapshotFn();
       }
-    ),
-    {n: 3, s: 'test', b: true}
+    }
+  ),
+  {n: 3, s: 'test', b: true}
 )
 ```
 
