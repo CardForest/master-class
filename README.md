@@ -44,7 +44,7 @@ or
 
 ## API
 
-This section is in progress, but you can probably can ahead by following the [tests](/test).
+Checkout the [tests](/test).
 
 ## License
 
