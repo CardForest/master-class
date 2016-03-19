@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/class');
+module.exports = require('./lib/classFactories/mObjectFactory');
