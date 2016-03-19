@@ -42,7 +42,16 @@ or
 * [Serialization](docs/serialization.md)
 * [The state pattern](docs/state-pattern.md)
 
-## API
+## Todos
+
+
+* **Syntactic sugar**— The current API is uniform, but not very flexible. There are many special cases where propery factories could be made simpler from the library user point of view. e.g., 
+
+  `M({num: Number, [{bool: Boolean}])`
+  instead of `M({props: {num: M.Number(), [{bool: M.Boolean()}]}})`
+* 
+
+## API Reference
 
 [WIP] For now, you should just read through the [tests](https://github.com/CardForest/master-class/tree/master/test).
 
