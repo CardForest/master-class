@@ -56,7 +56,7 @@ const myInstance = M({
 }).createInstance();
 ```
 
-Those methods can be overriden by the `control`
+Those methods can be overriden by the `control`'s `onMutatorCall` method
 
 ```js
 myInstance.control.onMutatorCall = 
@@ -71,7 +71,7 @@ myInstance.m1(3);
 assert.equal(myInstance.n, 7);
 ```
 
-and be guarded by a non-mutating function (assured internally by `control.isChangeAllowed`)
+and be guarded by a [idempotent](https://en.wikipedia.org/wiki/Idempotence) function (assured internally by `control.isChangeAllowed`)
 
 ```js
 const myInstance = M({
