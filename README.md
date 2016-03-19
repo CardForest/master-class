@@ -7,6 +7,10 @@ This is library provides an [ECMAScript 6 class](https://developer.mozilla.org/e
 
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
+## Goals
+
+
+
 ## Install
 
 ```sh
@@ -68,8 +72,8 @@ or
   })
   ```
 * **Implement Angular-like [watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch) and [digest](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest)**
-* 
-* **Add state transition hooks**— add `onEnter` and `onLeave` events.
+
+* **Add state transition hooks**— that is, `onEnter` and `onLeave` events.
 
 * **Consider integrating with [inversify](http://inversify.io/)**
 
