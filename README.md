@@ -16,7 +16,7 @@ $ npm install --save master-class
 
 ## Usage
 
-0. Import the library
+0. Require the library
 ```js
 const M = require('master-class');
 ```
