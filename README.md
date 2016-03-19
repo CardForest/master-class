@@ -55,7 +55,7 @@ or
 
 * **Add syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
 
-  e.g., something like
+  That is, something like
 
   `M({num: Number, arr: [{bool: Boolean}]})`
   
