@@ -1,5 +1,6 @@
-## Table of Contents
+# Summary
 
-* [Read Me](/README.md)
+* [Read Me](README.md)
 * Features
-  * [Runtime Strict Typing](/docs/rt-strict-typing.md)
+   * [Runtime Strict Typing](docs/runtime-strict-typing.md)
+
