@@ -37,8 +37,9 @@ or
 
 ## <a name="Features"></a>Features
 
-* [Run-time Strict Typing](docs/strict-typing.md)
-* [Fine-grained change notification](docs/change notification.md)
+* [Run-time strict typing](docs/strict-typing.md)
+* [Fine-grained change control](docs/change-control.md)
+* [Serialization](docs/serialization.md)
 
 
 ## License
