@@ -5,11 +5,12 @@
 
 This is library provides a [class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29). The instances of its generated classes have [many features](#Features) that will eventually allow them to:
 
-- Feel like plain objects
-- Remotely accessed
-- Viewed differently in different contexts (e.g., depending on the viewer or an internal state)
-- Efficiently stored
+- Be distributively managed between machines
+- Be differently viewed in different contexts (e.g., depending on the viewer or an internal state)
+- Be efficiently stored
 - Keep precise track of their changes
+
+ All which while feeling like plain javascript objects.
 
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
