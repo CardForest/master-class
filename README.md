@@ -42,7 +42,7 @@ or
 * [Serialization](docs/serialization.md)
 * [The state pattern](docs/state-pattern.md)
 
-## Todos
+## Roadmap
 
 
 * **Add syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
@@ -69,7 +69,9 @@ or
   ```
 * **Reselect getters**— should use something like [redux's reselect](https://github.com/reactjs/reselect) instead of the current getters implementation.
 
-* **State transitions hooks** 
+* **Angular-like digest loop and watch hooks** 
+
+* * **State transition hooks** 
 
 ## API Reference
 
