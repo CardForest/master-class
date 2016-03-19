@@ -6,7 +6,7 @@
 This is library provides a [class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29). The instances of its generated classes have [many features](#Features) that will eventually allow them to:
 
 - Feel like plain objects
-- Remotely Accessed
+- Remotely accessed
 - Viewed differently in different contexts (e.g., depending on the viewer or an internal state)
 - Efficiently stored
 - Keep precise track of their changes
