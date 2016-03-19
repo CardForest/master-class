@@ -53,7 +53,7 @@ or
 ## Roadmap
 
 
-* **Add syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
+* **Add syntactic sugar**— The current API is uniform, which allow for a clean implementation, but, from the library user's point of view, it should be simpler. 
 
   That is, something like
 
