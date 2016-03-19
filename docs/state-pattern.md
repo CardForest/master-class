@@ -75,10 +75,13 @@ const MyClass = M({
 const myInstance = new MyClass();
 assert.deepEqual(myInstance.state, {flag2: false, s: ''});
 ```
-Note that `myInstance.state.m` property is not included, even though `this.root.flag1` is `true`. This is because its parent state is blocked on `this.flag2`. So if we just assign `myInstance.state.flag2 = true`, we'll get:
+
+Note that `myInstance.state.m` property is not included, even though `this.root.flag1` is `true`. This is because its parent state is blocked on `this.flag2`. Now, if we just assign `myInstance.state.flag2 = true`, we'll get
 
 ```js
-assert.deepEqual(myInstance.state, 
-  {flag2: true, s: '', n: 3, m: 5});
+assert.deepEqual(
+  myInstance.state, 
+  {flag2: true, s: '', n: 3, m: 5}
+);
 ```
 
