@@ -23,14 +23,22 @@ const M = require('master-class');
 ```js
 const MyMClass = M({
   props: {
-    instanceString: M.String(),
-    instanceNumber: M.Number({initialValue: 5}),
-    object: M.Object({
+    myString: M.String(),
+    myNumber: M.Number({initialValue: 5}),
+    mySubObject: M.Object({
       props: {
-        x: M.Boolean()
+        subObjectBoolean: M.Boolean()
       }
     })
   }
+});
+
+const myInstance = new MyMClass(); // equivalent to MyMClass.createInstance();
+
+assert.deepEqual(myInstance, {
+  myString: '',
+  myNumber: 5,
+  mySubObject: {subObjectBoolean: false}
 });
 ```
 
