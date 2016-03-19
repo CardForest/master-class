@@ -44,7 +44,7 @@ or
 
 ## API
 
-[WIP] For now, you should go ahead and go through the [tests](/test).
+[WIP] For now, you should go through the [tests](/test).
 
 ## License
 
