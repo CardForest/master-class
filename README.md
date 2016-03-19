@@ -45,7 +45,7 @@ or
 ## Todos
 
 
-* **Add syntactic sugar**— The current API is uniform, but there are many special cases in which it could be made simpler from the library user point of view. 
+* **Add syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
 
   e.g., something like
 
@@ -67,7 +67,9 @@ or
     }
   })
   ```
-* 
+* **Reselect getters**— should use something like [redux's reselect](https://github.com/reactjs/reselect) instead of the current getters implementation.
+
+* **State transitions hooks** 
 
 ## API Reference
 
