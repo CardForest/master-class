@@ -4,7 +4,6 @@ var assert = require('assert');
 var sinon = require('sinon');
 
 var M = require('..');
-var snapshotUtil = require('../lib/types/snapshotUtil');
 
 describe('snapshot', function () {
   it('copy object with primitive properties', function () {
@@ -111,7 +110,9 @@ describe('snapshot', function () {
   });
 
   it('call mapper on every property', function () {
-    var mapperSpy = sinon.spy(snapshotUtil.noOpMapper);
+    var mapperSpy = sinon.spy(function noOpMapper(opt, instance, keyPath, snapshotFn) {
+      return snapshotFn();
+    });
 
     var o =
       M({

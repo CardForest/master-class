@@ -68,10 +68,10 @@ describe('readme example', function () {
     instance.control.isChangeAllowed = true;
 
     // it can listen to changes
-    instance.control.on('change', function (type, payload) {
+    instance.control.on('change', function (type, payload) { // jshint ignore:line
       if (type === 'setValue') {
-        console.log(payload.trgKeyPath.join('.') + "'s '" + payload.key +
-          "' property was set with " + payload.newValue);
+        // console.log(payload.trgKeyPath.join('.') + "'s '" + payload.key +
+        //   "' property was set with " + payload.newValue);
       }
     });
     instance.stash.size = 2; // logs "stash's 'size' property was set with 2"
