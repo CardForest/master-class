@@ -19,7 +19,7 @@ assert.throws(function() {myInstance.n = 4;});
 assert.equal(myInstance.n, 3);
 ```
 
-This feature is used internally by the `M.Getter` type
+This feature is internally used by the `M.Getter` type
 
 ```js 
 M({
@@ -43,7 +43,7 @@ myInstance.control.on('change',
 );
 ```
 
-Additionally, we have the `M.Mutator` type, which is used to declare any state changing method.
+Additionally, we have the `M.Mutator` type, which is used to declare any state changing method
 
 ```js
 const myInstance = M({
