@@ -44,7 +44,7 @@ or
 
 ## API
 
-[WIP] For now, you should just read through the [tests](/test).
+[WIP] For now, you should just read through the [tests](https://github.com/CardForest/master-class/tree/master/test).
 
 ## License
 
