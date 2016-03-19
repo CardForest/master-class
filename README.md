@@ -21,21 +21,12 @@ $ npm install --save master-class
 const M = require('master-class');
 ```
 
-0. create a new class:
+0. Create a new class:
 ```js
-  const MyMClass = M({
-    props: {
-      myString: M.String(),
-      myNumber: M.Number({initialValue: 5}),
-      mySubObject: M.Object({
-        props: {
-          subObjectBoolean: M.Boolean()
-        }
-      })
-    }
-  });
+  const MyMClass = M({/* options */});
 ```
 
+0. Create an instance:
 
 ```js
 const myInstance = new MyMClass(); // equivalent to MyMClass.createInstance();
