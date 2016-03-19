@@ -1,2 +1,2 @@
-# Runtime Strict Typing
+# Strict Typing
 
