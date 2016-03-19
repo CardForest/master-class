@@ -21,7 +21,7 @@ const M = require('master-class');
 ```
 
 ```js
-conat MyMClass = M({
+const MyMClass = M({
   props: {
     instanceString: M.String(),
     instanceNumber: M.Number({initialValue: 5}),
@@ -36,7 +36,7 @@ conat MyMClass = M({
 
 ## License
 
-AGPL-3.0 © [Amit Portnoy](https://github.com/amitport)
+[AGPL-3.0](http://www.gnu.org/licenses/agpl-3.0.en.html) © [Amit Portnoy](https://github.com/amitport)
 
 [npm-image]: https://badge.fury.io/js/master-class.svg
 [npm-url]: https://npmjs.org/package/master-class
