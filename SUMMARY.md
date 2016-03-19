@@ -2,5 +2,5 @@
 
 * [Read Me](README.md)
 * Features
-   * [Strict Typing](docs/runtime-strict-typing.md)
+   * [Strict Typing](docs/strict-typing.md)
 
