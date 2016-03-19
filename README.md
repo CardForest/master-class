@@ -3,7 +3,7 @@
 > JavaScript classes with an edge.
 
 
-This is library provides an [ECMAScript 6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29). The instances of  its generated classes have *magic* features.
+This is library provides an [ECMAScript 6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29). The instances of  its generated classes have *"magic"* [Features](#Features).
 
 #  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
@@ -27,16 +27,16 @@ const M = require('master-class');
 ```
 
 0. Create an instance:
-
 ```js
-const myInstance = new MyMClass(); // equivalent to MyMClass.createInstance();
-
-assert.deepEqual(myInstance, {
-  myString: '',
-  myNumber: 5,
-  mySubObject: {subObjectBoolean: false}
-});
+  const myInstance = new MyMClass();
 ```
+or
+```js
+  const myInstance = MyMClass.createInstance();
+```
+
+## Features
+
 
 ## License
 
