@@ -27,7 +27,7 @@ assert.deepEqual(
 );
 ```
 
-We also have a non-enumerable `snapshot` method that convert the instance into a raw plain object, stripping it from any getters or setters
+We also have a non-enumerable `snapshot` method that converts the instance into a raw plain object, stripping it from any getters or setters
 
 ```js
 assert.deepEquals(
@@ -36,7 +36,7 @@ assert.deepEquals(
 )
 ```
 
-You can provide a `mapper` to override the snapshot process
+Additionally, you can provide a `mapper` to override the snapshot process
 
 ```js
 assert.deepEquals(
@@ -53,7 +53,7 @@ assert.deepEquals(
 )
 ```
 
-Last by not least, we have the `M.Ref` type that ensures that object references survive serialization
+Lastly, we have the `M.Ref` type that ensures that object references survive serialization
 
 ```js
 const MyClass = M{
