@@ -1,4 +1,4 @@
-# Mater-Class
+# Master-Class
 
 > JavaScript classes with an edge.
 
