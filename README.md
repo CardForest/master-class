@@ -45,7 +45,7 @@ or
 ## Roadmap
 
 
-* **Syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
+* **Add syntactic sugar**— The current API is uniform, which makes for a clean implementation, but, from the library user point of view, it should be made simpler. 
 
   e.g., something like
 
@@ -67,11 +67,14 @@ or
     }
   })
   ```
-* **Reselect-like getters**— should use something like [redux's reselect](https://github.com/reactjs/reselect) instead of the current getters implementation.
+* **Implement Angular-like [watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch) and [digest](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest)**
+* 
+* **Add state transition hooks**— add `onEnter` and `onLeave` events.
 
-* **Angular-like digest cycle and watch hooks**— currently, there is one active watcher in `M.State`'s `when` option. We should introduce a generic mechanism.
+* **Consider integrating with [inversify](http://inversify.io/)**
 
-* **State transition hooks**— should add `onEnter` and `onLeave` events.
+* **Consider using [Redux](https://github.com/reactjs/redux)'s [reselect](https://github.com/reactjs/reselect) for getters**
+
 
 ## API Reference
 
