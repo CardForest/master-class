@@ -1,6 +1,9 @@
-#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+# Mater-Class
 
 > JavaScript classes with an edge.
+
+#  [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
+
 
 This is a wrapper around js objects that gives them some extra functionality. It's hard to group those features into one paragraph but the _Usage_ section below should demonstrate the interesting parts.
 
