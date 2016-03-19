@@ -5,8 +5,8 @@
 
 This is library provides an [ECMAScript 6 class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29). The instances of its generated classes have [*"magic"* features](#Features). 
 
-The eventual **goal** is to make javascript objects that:
-- *feel* like plain objects
+The **goal** is to make javascript objects that:
+- feel like plain objects
 - can be distributed between machines
 - can be viewed differently in different contexts (that is, depending on the viewer or some global state)
 - can be efficiently stored
