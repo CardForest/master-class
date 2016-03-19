@@ -21,7 +21,7 @@ const MyClass = M({
 const myInstance = new MyClass();
 ```
 
-Now `myInstance` is just a normal javascript object
+Now `myInstance` is a normal javascript object
 
 ```js
 assert.deepEqual(myInstance, {
@@ -30,6 +30,22 @@ assert.deepEqual(myInstance, {
   obj: {
     bool: false
   }
+});
+```
+
+that prevents incorrect type assignments:
+
+```js
+assert.throws(function() {
+  myInstance.obj.bool = 'will throw';
+});
+```
+
+and object extensions:
+
+```js
+assert.throws(function() {
+  myInstance.newProperty = 'will throw';
 });
 ```
 
