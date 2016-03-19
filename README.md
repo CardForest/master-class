@@ -85,7 +85,7 @@ or
 
 ## API Reference
 
-[WIP] For now, you should just read through the [tests](https://github.com/CardForest/master-class/tree/master/test).
+[WIP] For now, you could just read through the [tests](https://github.com/CardForest/master-class/tree/master/test).
 
 ## License
 
