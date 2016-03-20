@@ -2,7 +2,7 @@
 
 First, if you are not familiar with this pattern, I recommend you read this [excellent article](http://gameprogrammingpatterns.com/state.html).
 
-Our Master-Class types include an `M.State` type. That type helps us turns objects into concurrent, hierarchical state machines.
+Our Master-Class types include an `M.State` type. That type helps us turn objects into concurrent, hierarchical state machines.
 
 The `M.State` type basically merges object types together
 
