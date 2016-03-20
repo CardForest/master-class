@@ -15,7 +15,7 @@ assert.throws(function() {myInstance.n = 4;});
 assert.equal(myInstance.n, 3);
 ```
 
-This feature is internally used by the `M.Getter` type
+This feature is used to enforce that no state mutations in getters
 
 ```js 
 M({
@@ -37,7 +37,7 @@ myInstance.control.on('change',
 );
 ```
 
-Additionally, we have the `M.Mutator` type, which is used to declare any state changing method
+Additionally, when we can declare an object methods that may introduce mutations
 
 ```js
 myInstance = M({
@@ -48,7 +48,7 @@ myInstance = M({
 }).createInstance();
 ```
 
-Those methods can be overridden by the `control`'s `onMutatorCall` method
+and those can be overridden by the `control`'s `onMutatorCall` method
 
 ```js
 myInstance.control.onMutatorCall = 
@@ -64,6 +64,8 @@ assert.equal(myInstance.n, 7);
 ```
 
 and be guarded by an [idempotent](https://en.wikipedia.org/wiki/Idempotence) function (ensured internally by `control.isChangeAllowed`)
+
+> Note that to order to pass the `guard` property, we now need to explicitly use `M.Mutator` class factory
 
 ```js
 myInstance = M({
