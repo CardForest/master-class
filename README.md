@@ -50,40 +50,6 @@ or
 * [Serialization](docs/serialization.md)
 * [The state pattern](docs/state-pattern.md)
 
-## Roadmap
-
-
-* **Add syntactic sugar**— The current API is uniform, which allow for a clean implementation, but, from the library user's point of view, it should be simpler. 
-
-  That is, something like
-
-  `M({num: Number, arr: [{bool: Boolean}]})`
-  
-  instead of the current
-  
-  ```js
-  M({
-    props: {
-      num: M.Number(),
-      arr: M.Array({
-        elem: M({
-          props: {
-            bool: M.Boolean()
-          }
-        })
-      })
-    }
-  })
-  ```
-* ~~**Implement Angular-like [watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch) and [digest](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest)**~~— done, but undocumented
-
-* **Add state transition hooks**— e.g., `onEnter` and `onLeave` events.
-
-* **Consider integrating with [Inversify](http://inversify.io/)**
-
-* **Consider using [Redux](https://github.com/reactjs/redux)'s [reselect](https://github.com/reactjs/reselect) for getters**
-
-
 ## API Reference
 
 [WIP] For now, you could just read through the [tests](https://github.com/CardForest/master-class/tree/master/test).
