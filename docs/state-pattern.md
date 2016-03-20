@@ -7,72 +7,46 @@ Our Master-Class types include an `M.State` type. That type helps us turns objec
 The `M.State` type basically merges object types together
 
 ```js
-const MyClass = M({
-  props: {
-    state: M.State([
-      {
-        delegate: M({ // (1) first object type
-          props: {
-            n: M.Number({initialValue: 3})
-          }
-        }),
-        subState: [{
-          delegate: M({ // (1.1) first object type child
-            props: {
-              m: M.Number({initialValue: 5})
-            }
-          })
-        }]
-      },
-      {
-        delegate: M({ // (2) second object type
-          props: {
-            s: M.String()
-          }
-        })
-      }
-    ])
-  }
+let MyClass = M({
+  state: M.State([
+    {
+      delegate: M({n: 3}), // (1) first object type
+      subState: [{
+        delegate: M({m: 5}) // (1.1) first object type child
+      }]
+    },
+    {
+      delegate: M({s: String}) // (2) second object type
+    }
+  ])
 });
-const myInstance = new MyClass();
-assert.deepEqual(myInstance.state, {n: 3, m: 5, s: ''})
+let myInstance = new MyClass();
+assert.deepEqual(myInstance.state, {n: 3, m: 5, s: ''});
 ```
 
 *but* every merge can be conditional using the `when` option
 
 ```js
-const MyClass = M({
-  props: {
-    flag1: M.Boolean({initialValue: true}),
-    state: M.State([
-      {
-        when() {return this.flag2;}
-        delegate: M({ // (1) first object type
-          props: {
-            n: M.Number({initialValue: 3})
-          }
-        }),
-        subState: [{
-          when() {return this.root.flag1;}
-          delegate: M({ // (1.1) first object type child
-            props: {
-              m: M.Number({initialValue: 5})
-            }
-          })
-        }]
-      },
-      {
-        delegate: M({ // (2) second object type
-          props: {
-            flag2: M.Boolean(),
-            s: M.String()
-          }
-        })
-      }
-    ])
-  }
+MyClass = M({
+  flag1: true,
+  state: M.State([
+    {
+      when() {return this.flag2;},
+      delegate: M({n: 3}), // (1) first object type
+      subState: [{
+        when() {return this.root.flag1;},
+        delegate: M({m: 5}) // (1.1) first object type child
+      }]
+    },
+    {
+      delegate: M({ // (2) second object type
+        flag2: Boolean,
+        s: String
+      })
+    }
+  ])
 });
-const myInstance = new MyClass();
+myInstance = new MyClass();
 assert.deepEqual(myInstance.state, {flag2: false, s: ''});
 ```
 
