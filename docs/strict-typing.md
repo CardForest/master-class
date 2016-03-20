@@ -4,17 +4,10 @@ We can generate classes that enforce run-time type checks and prevent object ext
 
 ```js
 const MyClass = M({
-  props: {
-    str: M.String(),
-    arr: M.Array({
-      defaultLength: 2,
-      elem: M.Number()
-    }),
-    obj: M({
-      props: {
-        bool: M.Boolean()
-      }
-    })
+  str: String,
+  arr: [Number],
+  obj: {
+    bool: Boolean
   }
 });
 
@@ -26,7 +19,7 @@ Now `myInstance` is a normal JavaScript object
 ```js
 assert.deepEqual(myInstance, {
   str: '',
-  arr: [0, 0],
+  arr: [0],
   obj: {
     bool: false
   }
