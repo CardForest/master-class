@@ -15,7 +15,7 @@ assert.throws(function() {myInstance.n = 4;});
 assert.equal(myInstance.n, 3);
 ```
 
-This feature is used to enforce that no state mutations in getters
+This feature is used to enforce no state mutations in getters
 
 ```js 
 M({
