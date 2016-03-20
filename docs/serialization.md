@@ -37,7 +37,7 @@ assert.deepEqual(
 Additionally, you can provide a `mapper` to override the snapshot process
 
 ```js
-assert.deepEquals(
+assert.deepEqual(
   myInstance.snapshot(
     function (opt, instance, keyPath, snapshotFn) {
       if (keyPath[0] === 'n') {
@@ -47,24 +47,19 @@ assert.deepEquals(
       }
     }
   ),
-  {n: 3, s: 'test', b: true}
-)
+  {n: 5, s: 'test', b: true}
+);
 ```
 
 Lastly, we have the `M.Ref` type that ensures that object references survive serialization
 
 ```js
-const MyClass = M{
-  props: {
-    r: M.Ref(),
-    o: M.Object({
-      props: {
-        n: M.Number()
-      }
-    })
+myInstance = M({
+  r: M.Ref(),
+  o: {
+    n: Number
   }
-}
-const myInstance = new MyClass();
+}).createInstance();
 myInstance.r = myInstance.o;
 
 const myInstanceCopy = new MyClass(myInstance.snapshot());
