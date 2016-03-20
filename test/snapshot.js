@@ -224,8 +224,8 @@ describe('snapshot', function () {
     var player1Snapshot = o.snapshot(playerScopeMapper(1));
 
     assert.deepEqual(player0Snapshot, {
-        secretObject: {$override: 'hidden'},
-        secretArray: {$override: 'hidden'},
+        secretObject: 'hidden',
+        secretArray: 'hidden',
         notSecret: 'notSecret',
         players: [
           {secret: 'secret', notSecret: 'notSecret'},
@@ -233,8 +233,8 @@ describe('snapshot', function () {
         ]}
     );
     assert.deepEqual(player1Snapshot, {
-        secretObject: {$override: 'hidden'},
-        secretArray: {$override: 'hidden'},
+        secretObject: 'hidden',
+        secretArray: 'hidden',
         notSecret: 'notSecret',
         players: [
           {secret: 'hidden', notSecret: 'notSecret'},
