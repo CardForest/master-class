@@ -16,7 +16,7 @@ assert.deepEqual(
 );
 ```
 
-It can also be overriden in the constructor
+It can also be overridden in the constructor
 
 ```js
 assert.deepEqual(
