@@ -37,7 +37,7 @@ myInstance.control.on('change',
 );
 ```
 
-Additionally, when we can declare an object methods that may introduce mutations
+Additionally, we can declare an object methods that may introduce mutations
 
 ```js
 myInstance = M({
