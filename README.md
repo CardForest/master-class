@@ -75,7 +75,7 @@ or
     }
   })
   ```
-* **Implement Angular-like [watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch) and [digest](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest)**
+* ~~Implement Angular-like [watch](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$watch) and [digest](https://docs.angularjs.org/api/ng/type/$rootScope.Scope#$digest)~~ done, but undocumented
 
 * **Add state transition hooks**— e.g., `onEnter` and `onLeave` events.
 
