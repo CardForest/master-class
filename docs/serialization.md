@@ -4,13 +4,11 @@ Instances initial value can be determined by the class
 
 ```js
 const MyClass = M({
-  props: {
-    n: M.Number({initialValue: 3}),
-    s: M.String({initialValue: 'test'}),
-    b: M.Boolean({initialValue: true})
-  }
+  n: 3,
+  s: 'test',
+  b: true
 });
-const myInstance = new MyClass();
+let myInstance = new MyClass();
 
 assert.deepEqual(
   myInstance,
@@ -30,10 +28,10 @@ assert.deepEqual(
 We also have a non-enumerable `snapshot` method that converts the instance into a raw plain object, stripping it from any getters or setters
 
 ```js
-assert.deepEquals(
+assert.deepEqual(
   MyClass.createInstance(myInstance.snapshot()),
   myInstance
-)
+);
 ```
 
 Additionally, you can provide a `mapper` to override the snapshot process
@@ -72,5 +70,4 @@ myInstance.r = myInstance.o;
 const myInstanceCopy = new MyClass(myInstance.snapshot());
 
 assert.strictEqual(myInstanceCopy.r, myInstanceCopy.o);
-
 ```
