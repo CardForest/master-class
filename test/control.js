@@ -79,6 +79,16 @@ describe('control', function () {
     assert.deepEqual(o.control.onMutatorCall.firstCall.args, [[ 'm' ], [ 3 ], mutatorToWrap]);
   });
 
+  it('can pass control params as root second parameter', function () {
+    var o = M({
+      props: {
+        n: M.Number()
+      }
+    }).createInstance(null, {isChangeAllowed: false});
+
+    assert.throws(function () {o.n = 3;});
+  });
+
   it('can override rootPropertyName', function () {
     var o = M({
       rootPropertyName: 'head',
