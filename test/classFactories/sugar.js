@@ -42,6 +42,19 @@ describe('sugar', function () {
     assert.strictEqual(s, 'test');
   });
 
+  it('passes keys that start with $ as object options', function () {
+    const o = M.Sugar({
+      $rootPropertyName: 'test',
+      inner: {
+        get it() {
+          return this.test;
+        }
+      }
+    }).createInstance();
+
+    assert.strictEqual(o.inner.it, o);
+  });
+
   it('traverse to object properties', function () {
     const o = M.Sugar({
       n: Number,
@@ -59,7 +72,9 @@ describe('sugar', function () {
   it('converts getters', function () {
     const o = M.Sugar({
       n: 3,
-      get g() {return this.n;}
+      get g() {
+        return this.n;
+      }
     }).createInstance();
 
     o.n = 2;
@@ -69,7 +84,9 @@ describe('sugar', function () {
   it('converts mutators', function () {
     const o = M.Sugar({
       n: 3,
-      m(x) {this.n += x;}
+      m(x) {
+        this.n += x;
+      }
     }).createInstance();
 
     o.m(1);
