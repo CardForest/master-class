@@ -64,8 +64,9 @@ describe('array', function () {
         elem: M.Number()
       })
     }).createInstance([[1, 2], [3, 4]]);
-
-    assert.deepEqual(arr, [[1, 2], [3, 4]]);
+// console.log(arr.$snapshot())
+//     throw Error('maybe properties should not have been defined on the prototype...')
+    assert.deepEqual(arr.$snapshot(), [[1, 2], [3, 4]]);
   });
 
   it('can be set length on instance creation', function () {
@@ -77,7 +78,7 @@ describe('array', function () {
       })
     }).createInstance({length: 1});
 
-    assert.deepEqual(arr, [[0, 0]]);
+    assert.deepEqual(arr.$snapshot(), [[0, 0]]);
   });
 
   it('properties are frozen', function () {
@@ -87,7 +88,7 @@ describe('array', function () {
     }).createInstance();
 
     assert.throws(function() {arr.s = 'should throw';});
-    assert.throws(function() {delete arr[0];});
+    assert.throws(function() {delete Object.getPrototypeOf(arr)[0];});
   });
 
   it('throws exception on assignment of incorrect primitive type', function () {

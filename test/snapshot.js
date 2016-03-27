@@ -16,7 +16,7 @@ describe('snapshot', function () {
         }
       }).createInstance();
 
-    assert.deepEqual(o.snapshot(), {n: 3, s: 'test', b: true});
+    assert.deepEqual(o.$snapshot(), {n: 3, s: 'test', b: true});
   });
 
   it('copy object with nested object', function () {
@@ -30,7 +30,7 @@ describe('snapshot', function () {
       }
     }).createInstance();
 
-    assert.deepEqual(o.snapshot(), {o: {n: 3}});
+    assert.deepEqual(o.$snapshot(), {o: {n: 3}});
   });
 
   it('copy object with nested array', function () {
@@ -43,7 +43,7 @@ describe('snapshot', function () {
       }
     }).createInstance();
 
-    assert.deepEqual(o.snapshot(), {a: [3, 3]});
+    assert.deepEqual(o.$snapshot(), {a: [3, 3]});
   });
 
   it('copy object with nested array with object element', function () {
@@ -60,11 +60,11 @@ describe('snapshot', function () {
       }
     }).createInstance();
 
-    assert.deepEqual(o.snapshot(), {a: [{n: 3}, {n: 3}]});
+    assert.deepEqual(o.$snapshot(), {a: [{n: 3}, {n: 3}]});
   });
 
   it('does not include getters or mutators', function () {
-    var o = M({
+    var o = M.Object({
       props: {
         g: M.Getter(function() {
           return this.n + 1;
@@ -75,11 +75,11 @@ describe('snapshot', function () {
       }
     }).createInstance();
 
-    assert.deepEqual(o.snapshot(), {});
+    assert.deepEqual(o.$snapshot(), {});
   });
 
   it('can restore object from snapshot', function () {
-    var opt = {
+    const MyClass = M.Object({
       props: {
         n: M.Number(),
         o: M.Object({
@@ -95,18 +95,20 @@ describe('snapshot', function () {
           }
         })
       }
-    };
+    });
 
-    var o = M(opt).createInstance();
+    var o = MyClass.createInstance();
     o.n = 3;
     o.o.a[0].n = 4;
     o.o.a[1].n = 5;
 
-    assert.deepEqual(o, {n: 3, o: {a: [{n: 4}, {n: 5}]}});
+    var oSnapshot = o.$snapshot();
 
-    var oCopy = M(opt).createInstance(o.snapshot());
+    assert.deepEqual(oSnapshot, {n: 3, o: {a: [{n: 4}, {n: 5}]}});
 
-    assert.deepEqual(oCopy, o);
+    var oCopy = MyClass.createInstance(oSnapshot);
+
+    assert.deepEqual(oCopy.$snapshot(), oSnapshot);
   });
 
   it('call mapper on every property', function () {
@@ -130,7 +132,7 @@ describe('snapshot', function () {
         }
       }).createInstance();
 
-    o.snapshot(mapperSpy);
+    o.$snapshot(mapperSpy);
 
     assert.strictEqual(mapperSpy.callCount, 3); // called for 'o', 'o.a' and 'o.a[0]'
 

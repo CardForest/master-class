@@ -38,7 +38,7 @@ describe('object', function () {
       }
     }).createInstance();
 
-    assert(o.hasOwnProperty('o'));
+    assert('o' in o);
     assert.strictEqual(o.o.n, 0);
 
     o.o.n = 3;
@@ -71,7 +71,7 @@ describe('object', function () {
     }).createInstance();
 
     assert.throws(function() {o.s = 'should throw';});
-    assert.throws(function() {delete o.n;});
+    assert.throws(function() {delete Object.getPrototypeOf(o).n;});
   });
 
   it('allows assignment of nested objects', function () {
@@ -87,7 +87,7 @@ describe('object', function () {
 
     o.o = {n: 3};
 
-    assert.deepEqual(o, {o: {n: 3}});
+    assert.deepEqual(o.$snapshot(), {o: {n: 3}});
   });
 
   it('throws exception on assignment of incorrect primitive type', function () {

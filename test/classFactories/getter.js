@@ -81,19 +81,19 @@ describe('getter', function () {
   it('can access keyPath attribute', function () {
     var o = M.Object({
       props: {
-        arr: M.Array({
-          defaultLength: 4,
-          elem: M.Object({
+        o: M.Object({
+        //   defaultLength: 4,
+        //   elem: M.Object({
             props: {
-              idx: M.Getter(function() {
-                return this.keyPath[1];
+              parentProp: M.Getter(function() {
+                return this.$keyPath[0];
               })
             }
-          })
+        //   })
         })
       }
     }).createInstance();
 
-    assert.strictEqual(o.arr[2].idx, 2);
+    assert.strictEqual(o.o./*arr[2].*/parentProp, 'o');
   });
 });

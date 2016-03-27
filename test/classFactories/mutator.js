@@ -25,7 +25,7 @@ describe('mutator', function () {
   });
 
   it('can be guarded by a function', function () {
-    var o = M({
+    var o = M.Object({
       props: {
         n: M.Number({initialValue: 5}),
         isNLessThan10: M.Getter(function () {return this.n < 10;}),
@@ -38,6 +38,7 @@ describe('mutator', function () {
       }
     }).createInstance();
 
+    console.log(o.m)
     o.m(3);
     assert.strictEqual(o.n, 8);
 
@@ -68,7 +69,7 @@ describe('mutator', function () {
   });
 
   it('guards can be accessed through mutators', function () {
-    var o = M({
+    var o = M.Object({
       props: {
         n: M.Number({initialValue: 5}),
         m: M.Mutator({
@@ -80,8 +81,9 @@ describe('mutator', function () {
       }
     }).createInstance();
 
-    assert.strictEqual(o.m.guard, true);
+    
+    assert.strictEqual(o.m$guard(), true);
     o.n = 4;
-    assert.strictEqual(o.m.guard, false);
+    assert.strictEqual(o.m$guard(), false);
   });
 });

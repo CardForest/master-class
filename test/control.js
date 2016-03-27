@@ -8,7 +8,7 @@ var sinon = require('sinon');
 describe('control', function () {
   it('can disallow change', function () {
     var o =
-      M({
+      M.Object({
         props: {
           n: M.Number({initialValue: 3}),
           o: M.Object({
@@ -19,7 +19,7 @@ describe('control', function () {
         }
       }).createInstance();
 
-    o.control.isChangeAllowed = false;
+    o.$context.isChangeAllowed = false;
 
 
     assert.throws(function() {o.n = 4;});
