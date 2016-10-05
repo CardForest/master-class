@@ -25,23 +25,24 @@ $ npm install --save master-class
 ## Usage
 
 0. Require the library
-```js
-const M = require('master-class');
-```
 
+    ```js
+    const M = require('master-class');
+    ```
 0. Create a new class:
-```js
-  const MyMClass = M({/* options */});
-```
 
+    ```js
+    const MyMClass = M({/* options */});
+    ```
 0. Create an instance:
-```js
-  const myInstance = new MyMClass();
-```
-or
-```js
-  const myInstance = MyMClass.createInstance();
-```
+
+    ```js
+    const myInstance = new MyMClass();
+    ```
+    or
+    ```js
+      const myInstance = MyMClass.createInstance();
+    ```
 
 ## <a name="Features"></a>Features
 
