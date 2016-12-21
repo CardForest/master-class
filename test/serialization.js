@@ -1,83 +1,90 @@
 const assert = require('assert');
 const sinon = require('sinon');
 
-const M = require('../i2');
+const {Serializer, Deserializer} = require('../lib/serialization');
 
-describe('serialization', function() {
-  it('is deep equal', () => {
-    const m = Object.assign(new M(), {p: 1, o: {arr: [{p: 1}]}});
-    const x = m.serialize();
-    const mTarget = M.deserialize(x);
+describe('serialization', () => {
+  let serializer;
 
-    assert.deepEqual(mTarget, m);
+  beforeEach(() => {
+    serializer = new Serializer();
   });
 
-  it('preserves references', () => {
-    const o = {};
-    const m = Object.assign(new M(), {o1: o, o2: o});
-    const mTarget = M.deserialize(m.serialize());
+  describe('regular deserializer', () => {
+    let deserializer;
 
-    assert.strictEqual(mTarget.o1, mTarget.o2);
-  });
+    beforeEach(() => {
+      deserializer = new Deserializer();
+    });
 
-  it('preserves reference loop', () => {
-    const m = new M();
-    m.m = m;
-    const mTarget = M.deserialize(m.serialize());
+    it('is deep equal', () => {
+      const source = {p: 1, o: {arr: [{p: 1}]}};
+      const target = deserializer.deserialize(serializer.serialize(source));
 
-    assert.strictEqual(mTarget.m, mTarget);
-  });
+      assert.deepEqual(target, source);
+    });
 
-  it('preserves prototypes', () => {
-    class C1 extends M {}
-    class C2 {}
-    const c1 = Object.assign(new C1(), {c2: new C2()});
-    const c1Target = M.deserialize(c1.serialize(), {classes: {C1, C2}});
+    it('preserves references', () => {
+      const o = {};
+      const target = deserializer.deserialize(serializer.serialize({o1: o, o2: o}));
 
-    assert.strictEqual(Reflect.getPrototypeOf(c1Target), C1.prototype);
-    assert.strictEqual(Reflect.getPrototypeOf(c1Target.c2), C2.prototype);
-  });
+      assert.strictEqual(target.o1, target.o2);
+    });
 
-  it('can attach a new context', () => {
-    const m = new M();
-    const context = {};
-    const mTarget = M.deserialize(m.serialize(), {context});
+    it('preserves reference loop', () => {
+      const source = {};
+      source.loop = source;
+      const target = deserializer.deserialize(serializer.serialize(source));
 
-    assert.strictEqual(mTarget.$context, context);
-  });
+      assert.strictEqual(target.loop, target);
+    });
 
-  it('respects inner clone method', () => {
-    const m = Object.assign(new M(), {
-      o: {
-        clone() {
-          return {n: 3};
+    it('respects inner clone method', () => {
+      const target = deserializer.deserialize(serializer.serialize({
+        o: {
+          clone() {
+            return {n: 3};
+          }
         }
-      }
+      }));
+
+      assert.deepEqual(target.o.n, 3);
     });
 
-    assert.deepEqual(M.deserialize(m.serialize()).o.n, 3);
-  });
+    it('removes a property when it\'s value clone method returns undefined', () => {
+      const target = deserializer.deserialize(serializer.serialize({
+        o: {
+          clone() {}
+        }
+      }));
 
-  it('removes a property when it\'s value clone method returns undefined', () => {
-    const m = Object.assign(new M(), {
-      o: {
-        clone() {}
-      }
+      assert(!target.hasOwnProperty('o'));
     });
 
-    assert(!M.deserialize(m.serialize()).hasOwnProperty('o'));
+    it('inner clone method receives serialize\'s second parameter', () => {
+      const clone = sinon.spy();
+
+      deserializer.deserialize(serializer.serialize({
+        o: {clone}
+      }, 1));
+
+      assert(clone.calledOnce);
+      assert(clone.calledWithExactly(1));
+    });
   });
 
-  it('inner clone method receives initial call first parameter', () => {
-    const o = {
-      clone() {}
-    };
+  it('deserializer that preserves prototypes', () => {
+    class C1 {}
+    class C2 {}
+    const source = new C1();
+    source.c2 = new C2();
 
-    const serializeSpy = sinon.spy(o, 'clone');
+    const deserializerWithClasses = new Deserializer({classes: {C1, C2}});
 
-    Object.assign(new M(), {o}).serialize(1);
+    const target = deserializerWithClasses.deserialize(serializer.serialize(source));
 
-    assert.strictEqual(serializeSpy.callCount, 1);
-    assert(serializeSpy.firstCall.calledWithExactly(1));
+
+    assert.strictEqual(Reflect.getPrototypeOf(target), C1.prototype);
+    assert.strictEqual(Reflect.getPrototypeOf(target.c2), C2.prototype);
   });
 });

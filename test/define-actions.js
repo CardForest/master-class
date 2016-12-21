@@ -1,7 +1,7 @@
 const assert = require('assert');
 const sinon = require('sinon');
 
-const defineActions = require('../i3');
+const defineActions = require('../lib/define-actions');
 
 describe('defineActions', function() {
   it('attaches a methods to class prototype', () => {
