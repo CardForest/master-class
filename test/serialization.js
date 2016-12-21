@@ -46,10 +46,10 @@ describe('serialization', function() {
     assert.strictEqual(mTarget.$context, context);
   });
 
-  it('respects inner serialize method', () => {
+  it('respects inner clone method', () => {
     const m = Object.assign(new M(), {
       o: {
-        serialize() {
+        clone() {
           return {n: 3};
         }
       }
@@ -58,39 +58,26 @@ describe('serialization', function() {
     assert.deepEqual(M.deserialize(m.serialize()).o.n, 3);
   });
 
-  it('removes a property when it\'s value serialize method returns undefined', () => {
+  it('removes a property when it\'s value clone method returns undefined', () => {
     const m = Object.assign(new M(), {
       o: {
-        serialize() {}
+        clone() {}
       }
     });
 
     assert(!M.deserialize(m.serialize()).hasOwnProperty('o'));
   });
 
-  it('inner serialize receives initial call parameters', () => {
+  it('inner clone method receives initial call first parameter', () => {
     const o = {
-      serialize() {}
+      clone() {}
     };
 
-    const serializeSpy = sinon.spy(o, 'serialize');
+    const serializeSpy = sinon.spy(o, 'clone');
 
-    Object.assign(new M(), {o}).serialize(1, 2);
+    Object.assign(new M(), {o}).serialize(1);
 
     assert.strictEqual(serializeSpy.callCount, 1);
-    assert(serializeSpy.firstCall.calledWithExactly(1, 2));
-  });
-
-  it('can create a deserializer instances to bind deserialization options', () => {
-    const opt = {};
-    const deserializer = new M.Deserializer(opt);
-
-    const deserializeStub = sinon.stub(M, 'deserialize', () => {});
-
-    const o = {};
-    deserializer(o);
-
-    assert.strictEqual(deserializeStub.callCount, 1);
-    assert(deserializeStub.firstCall.calledWithExactly(o, opt));
+    assert(serializeSpy.firstCall.calledWithExactly(1));
   });
 });

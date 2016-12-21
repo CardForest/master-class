@@ -1,68 +1,89 @@
-class M {
-  constructor() {
-    this.$$id = 0;
-    this.$$classId = this.constructor.name;
+class Serializer {
+  constructor(opt = {}) {
+    this.opt = opt;
   }
 
-  serialize(...opt) {
-    const objects = [this];
-    let nextId = 1;
+  _processObject(object) {
+    if (!object.hasOwnProperty('$$cloneIdx')) {
+      // this is the first time we encounter this object
 
-    const objectsToSerialize = [this];
-    while (objectsToSerialize.length != 0) {
-      const clone = Object.assign({}, objectsToSerialize.shift());
+      // save for cleaning
+      this.objectsToClean.push(object);
+
+      const customCloning = 'clone' in object;
+      const clone = customCloning ?
+        object.clone(this.opt)
+        : Object.assign({}, object);
+
+      if (clone === undefined) {
+        // its clone returned undefined so we mark this on the original
+        object.$$cloneIdx = undefined;
+      } else if (clone instanceof Object) {
+        // we have an actual object to store
+
+        // store the constructor name
+        clone.$$classId = Reflect.getPrototypeOf(customCloning ? clone : object).constructor.name;
+
+        // save the cloned object and mark the id on the object
+        object.$$cloneIdx = this.clones.push(clone) - 1;
+      } else {
+        throw Error('expected clone to return an object');
+      }
+    }
+  }
+
+  serialize(object) {
+    this.clones = [];
+    this.objectsToClean = [];
+
+    this._processObject(object);
+
+    for (let i = 0; i < this.clones.length; i++) {
+      const clone = this.clones[i];
+
       Object
         .entries(clone)
         .forEach(([key, value]) => {
           if (value instanceof Object) {
-
-              if (!value.hasOwnProperty('$$classId')) {
-                const prototype = Reflect.getPrototypeOf(value);
-                if (prototype !== Object.prototype) {
-                  value.$$classId = prototype.constructor.name;
-                }
-              }
-
-              if (!value.hasOwnProperty('$$id')) {
-                if ('serialize' in value) {
-                  value = value.serialize(...opt)
-                  if (value === undefined) {
-                    delete clone[key]
-                    return;
-                  }
-                  if (!(value instanceof Object)) {
-                    throw Error('expected serialize to return an object');
-                  }
-                }
-
-                const id = nextId++;
-                objects[id] = value;
-                value.$$id = id;
-                if (!('serialize' in value)) {
-                  objectsToSerialize.push(value);
-                }
-              }
-
-              clone[key] = {$$ref: value.$$id};
-
-
-          } else {
-
-            clone[key] = value;
+            this._processObject(value);
+            if (value.$$cloneIdx === undefined) { // check if the value is marked for deletion
+              delete clone[key];
+            } else {
+              clone[key] = {$$ref: value.$$cloneIdx};
+            }
           }
-      });
-
-      objects[clone.$$id] = clone;
+        });
     }
-    return JSON.stringify(objects);
+
+    // cleanup
+    this.objectsToClean.forEach((_) => {
+      delete _.$$cloneIdx;
+    });
+
+    return JSON.stringify(this.clones);
+  }
+}
+
+class Deserializer {
+  static get defaultClasses() {return {M, Array, Object};}
+
+  constructor(opt = {}) {
+    this.opt = opt;
+
+    this.classes = this.opt.hasOwnProperty('classes') ?
+      Object.assign(this.opt.classes, Deserializer.defaultClasses)
+      : Deserializer.defaultClasses;
   }
 
-  static deserialize(serialized, opt = {}) {
-    const classes = opt.hasOwnProperty('classes') ? Object.assign(opt.classes, {M, Array}) : {M, Array};
+  deserialize(serialized) {
+    const objects = JSON.parse(serialized).map((object) => {
+      if (object.hasOwnProperty('$$classId')) {
+        object = Object.assign(Reflect.construct(this.classes[object.$$classId], []), object);
+        delete object.$$classId;
+      }
 
-    const objects = JSON.parse(serialized).map((object) =>
-        object.hasOwnProperty('$$classId') ? Object.assign(new (classes[object.$$classId])(), object) : object
-    );
+      return object;
+    });
 
     objects.forEach((object) => {
       Object.entries(object).forEach(([key, value]) => {
@@ -73,19 +94,22 @@ class M {
     });
 
     const object = objects[0];
-    if (opt.hasOwnProperty('context')) {
-      Reflect.defineProperty(object, '$context', {value: opt.context});
+    if (this.opt.hasOwnProperty('context')) {
+      Reflect.defineProperty(object, '$context', {value: this.opt.context});
     }
     return object;
   }
 }
 
-M.Deserializer = class Deserializer {
-  constructor(opt) {
-    return (serialized) => {
-      return M.deserialize(serialized, opt);
-    }
+class M {
+  serialize(opt) {
+    return new Serializer(opt).serialize(this);
   }
-};
+
+  static deserialize(serialized, opt) {
+    return new Deserializer(opt).deserialize(serialized);
+  }
+}
+
 
 module.exports = M;
