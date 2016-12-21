@@ -73,7 +73,7 @@ describe('serialization', () => {
     });
   });
 
-  it('deserializer that preserves prototypes', () => {
+  it('deserializer with extra classes', () => {
     class C1 {}
     class C2 {}
     const source = new C1();
