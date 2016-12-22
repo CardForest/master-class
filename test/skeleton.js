@@ -1,13 +1,13 @@
 const assert = require('assert');
 const sinon = require('sinon');
 
-const createRootProxy = require('../lib/create-root-proxy');
+const skeleton = require('../lib/skeleton');
 
-describe('createRootProxy', function() {
+describe('skeleton', function() {
   it('dispatch action event on property set', () => {
     const original = {};
     const dispatch = sinon.spy();
-    const proxy = createRootProxy(original, {dispatch});
+    const proxy = skeleton(original, {dispatch});
     original.x = 3;
     assert(!dispatch.called);
     proxy.y = 3;
@@ -25,7 +25,7 @@ describe('createRootProxy', function() {
   it('dispatch action event on property delete', () => {
     const original = {};
     const dispatch = sinon.spy();
-    const proxy = createRootProxy(original, {dispatch});
+    const proxy = skeleton(original, {dispatch});
     delete original.x;
     assert(!dispatch.called);
     delete proxy.y;
@@ -43,7 +43,7 @@ describe('createRootProxy', function() {
   it('dispatch action event on nested property set', () => {
     const original = {};
     const dispatch = sinon.spy();
-    const proxy = createRootProxy(original, {dispatch});
+    const proxy = skeleton(original, {dispatch});
     proxy.o = {};
     proxy.o.x = 3;
     assert(dispatch.calledTwice);
@@ -60,7 +60,7 @@ describe('createRootProxy', function() {
   it('dispatch action event on nested property delete', () => {
     const original = {};
     const dispatch = sinon.spy();
-    const proxy = createRootProxy(original, {dispatch});
+    const proxy = skeleton(original, {dispatch});
     proxy.o = {};
     delete proxy.o.x;
     assert(dispatch.calledTwice);
