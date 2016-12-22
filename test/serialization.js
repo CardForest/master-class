@@ -25,10 +25,7 @@ describe('serialization', () => {
           const source = sourceMapper({p: 1, o: {arr: [{p: 1}]}});
           const target = deserializer.deserialize(serializer.serialize(source));
 
-          // todo deepEqual currently loops forever in browsers -> revisit this and fix test to be
-          // assert.deepEqual(target, source);
-          assert.deepEqual([target.$keyPath, target.o.arr[0].p, target.p],
-                           [source.$keyPath, source.o.arr[0].p, source.p]);
+          assert.deepEqual(target, source);
         });
 
 
