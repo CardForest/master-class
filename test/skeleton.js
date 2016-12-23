@@ -17,7 +17,7 @@ describe('skeleton', function() {
       {
         targetKeyPath: [],
         actionType: 'set',
-        payload: {propertyKey: "y", value: 3}
+        args: [{propertyKey: "y", value: 3}]
       }
     );
   });
@@ -35,7 +35,7 @@ describe('skeleton', function() {
       {
         targetKeyPath: [],
         actionType: 'deleteProperty',
-        payload: {propertyKey: "y"}
+        args: [{propertyKey: "y"}]
       }
     );
   });
@@ -51,7 +51,7 @@ describe('skeleton', function() {
       {
         targetKeyPath: ['o'],
         actionType: 'set',
-        payload: {propertyKey: "x", value: 3}
+        args: [{propertyKey: "x", value: 3}]
       }
     );
   });
@@ -67,7 +67,7 @@ describe('skeleton', function() {
       {
         targetKeyPath: ['o'],
         actionType: 'deleteProperty',
-        payload: {propertyKey: "x"}
+        args: [{propertyKey: "x"}]
       }
     );
   });

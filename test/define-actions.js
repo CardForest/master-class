@@ -49,6 +49,6 @@ describe('defineActions', function() {
     c.m(1, 2, 3);
 
     assert(dispatch.called);
-    assert(dispatch.calledWithExactly('action', {keyPath: c.$keyPath, actionId: 'm', args: [1, 2, 3]}));
+    assert(dispatch.calledWithExactly('action', {targetKeyPath: c.$keyPath, actionType: 'm', args: [1, 2, 3]}));
   });
 });
