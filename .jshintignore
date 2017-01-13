@@ -1,2 +1,6 @@
 node_modules
 browser.js
+
+lib/state.js
+test/gaming-session.js
+test/state.js
