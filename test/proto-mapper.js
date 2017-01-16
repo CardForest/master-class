@@ -2,6 +2,11 @@
 
 const assert = require('assert');
 const ProtoMapper = require('../lib/proto-mapper');
+const {
+  declareRemotableActions,
+  RemotableMaker
+} = require('../lib/remotable');
+
 const sinon = require('sinon');
 
 describe('ProtoMapper', function () {
@@ -42,7 +47,7 @@ describe('ProtoMapper', function () {
     assert.strictEqual(b.z(), 'override2 override z');
   });
 
-  it('it can replace methods with calls to this.$context.dispatcher.dispatch', () => {
+  it('facilitates the remotable use-case', () => {
     // const protoMapper = new ProtoMapper({
     //   'action': (_, actionType) => function(...args) {
     //     return this.$context.dispatcher.dispatch('action', {
@@ -78,23 +83,13 @@ describe('ProtoMapper', function () {
 
     class C {m() {}}
 
-    Reflect.defineMetadata('action', undefined, C.prototype, 'm');
-
-    const protoMapper = new ProtoMapper({
-      'action': (_, actionType) => function(...args) {
-        return this.$context.dispatcher.dispatch('action', {
-          targetKeyPath: this.$keyPath,
-          actionType,
-          args
-        });
-      }
-    });
-
-    const c = new C();
-    Object.setPrototypeOf(c, protoMapper.map(C.prototype));
+    declareRemotableActions(C, 'm');
 
     const dispatch = sinon.spy();
-    c.$context = {dispatcher: {dispatch}};
+    const remotableMaker = new RemotableMaker({dispatch});
+
+    const c = new C();
+    Object.setPrototypeOf(c, remotableMaker.make(C.prototype));
     c.$keyPath = {};
 
     c.m(1, 2, 3);
