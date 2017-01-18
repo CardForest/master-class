@@ -4,7 +4,7 @@ const assert = require('assert');
 const ProtoMapper = require('../lib/proto-mapper');
 const {
   declareRemotableActions,
-  RemotableMaker
+  RemotableActionsDispatchProtoMapper
 } = require('../lib/remotable');
 
 const sinon = require('sinon');
@@ -48,48 +48,15 @@ describe('ProtoMapper', function () {
   });
 
   it('facilitates the remotable use-case', () => {
-    // const protoMapper = new ProtoMapper({
-    //   'action': (_, actionType) => function(...args) {
-    //     return this.$context.dispatcher.dispatch('action', {
-    //       targetKeyPath: this.$keyPath,
-    //       actionType,
-    //       args
-    //     });
-    //   }
-    // });
-    //
-    // class G {
-    //   static proxy(...constructorArgs) {
-    //     if (!this._proxyProto) {
-    //       this.actions.forEach((actionKey) => {
-    //         Reflect.defineMetadata('action', undefined, this.prototype, actionKey);
-    //       });
-    //       this._proxyProto = protoMapper.map(this.prototype);
-    //     }
-    //
-    //     const proxy = new this(...constructorArgs);
-    //     Object.setPrototypeOf(proxy, this._proxyProto);
-    //     return proxy;
-    //   }
-    // }
-    //
-    // class C extends G {
-    //   m() {}
-    //   static get actions() {return ['m'];}
-    // }
-    //
-    // const c = C.proxy();
-
-
     class C {m() {}}
 
     declareRemotableActions(C, 'm');
 
     const dispatch = sinon.spy();
-    const remotableMaker = new RemotableMaker({dispatch});
+    const remotableActionsDispatchProtoMapper = new RemotableActionsDispatchProtoMapper({dispatch});
 
     const c = new C();
-    Object.setPrototypeOf(c, remotableMaker.make(C.prototype));
+    Object.setPrototypeOf(c, remotableActionsDispatchProtoMapper.map(C.prototype));
     c.$keyPath = {};
 
     c.m(1, 2, 3);
