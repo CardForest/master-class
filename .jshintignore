@@ -2,5 +2,6 @@ node_modules
 browser.js
 
 lib/state.js
+lib/temp.js
 test/gaming-session.js
 test/state.js
