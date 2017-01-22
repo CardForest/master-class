@@ -1,13 +1,5 @@
-'use strict';
-
 const assert = require('assert');
 const ProtoMapper = require('../lib/proto-mapper');
-const {
-  declareRemotableActions,
-  RemotableActionsDispatchProtoMapper
-} = require('../lib/remotable');
-
-const sinon = require('sinon');
 
 describe('ProtoMapper', function () {
   class A {
@@ -45,23 +37,5 @@ describe('ProtoMapper', function () {
     assert.strictEqual(b.x(), 'override x');
     assert.strictEqual(b.y(), 'y');
     assert.strictEqual(b.z(), 'override2 override z');
-  });
-
-  it('facilitates the remotable use-case', () => {
-    class C {m() {}}
-
-    declareRemotableActions(C, 'm');
-
-    const dispatch = sinon.spy();
-    const remotableActionsDispatchProtoMapper = new RemotableActionsDispatchProtoMapper({dispatch});
-
-    const c = new C();
-    Object.setPrototypeOf(c, remotableActionsDispatchProtoMapper.map(C.prototype));
-    c.$keyPath = {};
-
-    c.m(1, 2, 3);
-
-    assert(dispatch.calledOnce);
-    assert(dispatch.calledWithExactly('action', {targetKeyPath: c.$keyPath, actionType: 'm', args: [1, 2, 3]}));
   });
 });

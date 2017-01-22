@@ -37,12 +37,13 @@
     "karma-firefox-launcher": "^1.0.0",
     "karma-mocha": "^1.3.0",
     "mocha": "^3.2.0",
+    "server-shutdown": "^0.3.0",
     "sinon": "^1.17.7",
     "watchify": "^3.8.0"
   },
   "scripts": {
     "karma": "karma start --browsers Firefox",
-    "mocha": "mocha test/**/*.js",
+    "mocha": "mocha  --harmony test/**/*.js",
     "lint": "jshint .",
     "browserify": "browserify index.js > browser.js",
     "pretest": "npm run lint",

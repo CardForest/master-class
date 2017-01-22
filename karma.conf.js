@@ -4,9 +4,9 @@ module.exports = function(config) {
 
     frameworks: ['browserify', 'mocha'],
 
-    files: ['test/**/*.js'],
+    files: ['test/**/!(transport).js'],
     preprocessors: {
-      'test/**/*.js': [ 'browserify' ]
+      'test/**/!(transport).js': [ 'browserify' ]
     },
 
     singleRun: true,
