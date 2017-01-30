@@ -20,7 +20,6 @@ describe('state', () => {
         source.x = 2;
         source.$subStates.d = new State();
         source.$subStates.d.a = 4;
-console.log(serializer.serialize(source))
         const target = deserializer.deserialize(serializer.serialize(source));
 
         assert.deepEqual(target, source);
