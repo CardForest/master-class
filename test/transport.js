@@ -13,13 +13,14 @@ const {
 const ServerShutdown = require('server-shutdown');
 const serverShutdown = new ServerShutdown();
 const {Serializer, Deserializer} = require('../lib/serialization');
+const {RootState, State, SubStatesContainer} = require('../lib/state');
 
 const assert = require('assert');
 const sinon = require('sinon');
 
 describe('transport', function () {
-  class Master {}
-  class Child {
+  class Master extends RootState {}
+  class Child extends State {
     async test(...args) {
       this.x = args[0];
       return await 'server got ' + args + ' from ' + this.$context.requester.id;
@@ -40,10 +41,10 @@ describe('transport', function () {
     serverShutdown.registerServer(sioServer.sio, ServerShutdown.Adapters.socketio);
 
     master = new Master();
-    master.child = new Child();
+    master.$subStates.child = new Child();
 
     attachIncomingDispatcher(sioServer, master);
-    master = skeleton(master, sioServer);
+    master.$$raw = skeleton(master.$$raw, sioServer);
 
     const port = await new Promise((resolve) => {
       httpServer.listen(function () {resolve(this.address().port)});
@@ -56,8 +57,9 @@ describe('transport', function () {
     const mappedChildProto = remotableActionsDispatchProtoMapper.map(Child.prototype);
 
     serializer = new Serializer();
+
     deserializer = new Deserializer({classes: {
-      Master,
+      Master, SubStatesContainer, State,
       Child: function() {
         const source = Reflect.construct(Child, []);
         Reflect.setPrototypeOf(source, mappedChildProto);
@@ -72,10 +74,12 @@ describe('transport', function () {
 
   it('should work', async () => {
     const clientView = deserializer.deserialize(serializer.serialize(master));
+
     attachClientReducer(sioClient, clientView);
 
-    assert.strictEqual(await clientView.child.test(1, 2), 'server got 1,2 from 0');
-    assert.strictEqual(clientView.child.x, 1);
+    assert.strictEqual(await clientView.test(1, 2), 'server got 1,2 from 0');
+    assert.strictEqual(clientView.x, 1);
+    // console.log(clientView.x)
   });
 
   it('facilitates the remotable use-case', () => {

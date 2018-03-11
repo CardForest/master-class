@@ -1,7 +1,7 @@
 const assert = require('assert');
 
 const {RootState, State, SubStatesContainer} = require('../lib/state');
-// const Resurrect = require('resurrect-js');
+
 const {Serializer, Deserializer} = require('../lib/serialization');
 
 describe('state', () => {
