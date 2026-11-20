@@ -17,7 +17,7 @@ This library provides a [class](https://developer.mozilla.org/en/docs/Web/JavaSc
 
 ## Install
 
-Requires Node.js 24 or newer. The package remains CommonJS and includes TypeScript declarations.
+Latest tested on Node.js 24. The package remains CommonJS and includes TypeScript declarations.
 
 ```sh
 $ npm install master-class
@@ -62,6 +62,7 @@ $ npm install master-class
 The guides are published at [cardforest.github.io/master-class](https://cardforest.github.io/master-class/).
 The React site uses Fumadocs and Next.js static export; Markdown in `docs/` is
 the single source of truth. The old GitBook configuration has been removed.
+Building the documentation website requires Node.js 24 or newer.
 
 ```sh
 cd website

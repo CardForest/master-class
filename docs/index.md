@@ -8,7 +8,7 @@ change control, serialization, and hierarchical state machines.
 
 ## Install
 
-Requires Node.js 24 or newer.
+Latest tested on Node.js 24.
 
 ```sh
 npm install master-class

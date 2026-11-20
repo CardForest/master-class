@@ -37,8 +37,5 @@
     "pretest": "npm run build",
     "test": "node --test \"test/*.js\" \"test/classFactories/*.js\"",
     "prepack": "npm run typecheck && npm test"
-  },
-  "engines": {
-    "node": ">=24"
   }
 }
