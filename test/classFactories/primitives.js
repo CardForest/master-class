@@ -1,10 +1,17 @@
 'use strict';
+const { describe, it } = require('node:test');
 
 var assert = require('assert');
 
 var M = require('../..');
 
 describe('primitives', function () {
+  it('treats null options like omitted options', function () {
+    assert.strictEqual(M.Number(null).createInstance(), 0);
+    assert.strictEqual(M.String(null).createInstance(), '');
+    assert.strictEqual(M.Boolean(null).createInstance(), false);
+  });
+
   it('have default values', function () {
     var n = M.Number().createInstance();
     assert.strictEqual(n, 0);

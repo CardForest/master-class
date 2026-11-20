@@ -1,7 +1,8 @@
 'use strict';
+const { describe, it } = require('node:test');
 
 const assert = require('assert');
-const ProtoMapper = require('../lib/utils/protoMapper');
+const ProtoMapper = require('../dist/lib/utils/protoMapper');
 
 describe('ProtoMapper', function () {
   class A {

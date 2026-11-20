@@ -1,4 +1,11 @@
 /node_modules/
+/dist/
+/website/node_modules/
+/website/.next/
+/website/.source/
+/website/out/
+/website/tsconfig.tsbuildinfo
+*.tgz
 npm-debug.log
 browser.js
 

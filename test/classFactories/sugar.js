@@ -1,9 +1,17 @@
 'use strict';
+const { describe, it } = require('node:test');
 
 var assert = require('assert');
 var M = require('../..');
 
 describe('sugar', function () {
+  it('rejects unsupported schemas explicitly', function () {
+    for (const schema of [null, undefined, Symbol('schema'), 1n, []]) {
+      assert.throws(() => M(schema), TypeError);
+    }
+    assert.throws(() => M({props: null}), TypeError);
+  });
+
   it('respects normal object syntax', function () {
     const o = M.Sugar({props: {n: M.Number()}}).createInstance();
 

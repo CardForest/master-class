@@ -1,4 +1,7 @@
-# The State Pattern
+---
+title: The State Pattern
+description: Build concurrent, hierarchical state machines from class delegates.
+---
 
 First, if you are not familiar with this pattern, I recommend you read this [excellent article](http://gameprogrammingpatterns.com/state.html).
 

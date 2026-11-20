@@ -1,4 +1,7 @@
-# Serialization
+---
+title: Serialization
+description: Take snapshots, customize serialized values, and restore references.
+---
 
 Instances initial value can be determined by the class
 

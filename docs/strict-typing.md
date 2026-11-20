@@ -1,4 +1,7 @@
-# Strict Typing
+---
+title: Strict Typing
+description: Enforce runtime property types and prevent object extensions.
+---
 
 We can generate classes that enforce run-time type checks and prevent object extensions
 

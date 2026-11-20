@@ -1,9 +1,16 @@
 'use strict';
+const { describe, it } = require('node:test');
 
 var assert = require('assert');
 var M = require('../..');
 
 describe('array', function () {
+  it('defaults null construction context', function () {
+    const ArrayClass = M.Array({elem: M.Number(), defaultLength: 1});
+    const array = new ArrayClass(null, null, null);
+    assert.deepEqual(array, [0]);
+  });
+
   it('allows primitive elements', function () {
     var arr = M.Array({
       defaultLength: 4,

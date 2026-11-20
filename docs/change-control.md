@@ -1,4 +1,7 @@
-# Change Control
+---
+title: Change Control
+description: Guard mutations, observe changes, and customize mutator calls.
+---
 
 Using the non-enumerable property `control` we can temporarily prevent changes
 

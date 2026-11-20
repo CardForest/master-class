@@ -1,0 +1,4 @@
+{
+  "title": "Master-Class",
+  "pages": ["index", "strict-typing", "change-control", "serialization", "state-pattern"]
+}
