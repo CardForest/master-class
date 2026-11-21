@@ -5,6 +5,7 @@ import { RestoredModel, trackModel, writeProperty } from '../utils/modelData';
 import { rootOf, type ArrayOptions, type ControlOptions, type KeyPath, type Managed, type SnapshotMapper } from '../../types';
 
 class MArray extends Array<unknown> {
+  static readonly modelKind = 'array';
   static createInstance = MObject.createInstance;
   static toPropertyDescriptor = MObject.toPropertyDescriptor;
   static defineProperty = MObject.defineProperty;
@@ -33,11 +34,14 @@ class MArray extends Array<unknown> {
     const length = restored ? restored.length! : value == null ? opt.defaultLength : (initialValue as unknown[]).length;
     this.length = length;
     restored?.register(this);
-    trackModel(this, 'array', (write) => Object.fromEntries(Object.getOwnPropertyNames(this)
-      .filter((key) => /^(0|[1-9]\d*)$/.test(key) && Number(key) < this.length)
-      .map((key) => [key, writeProperty(write, this, key, opt.elem)])), this.length);
+    trackModel(this, 'array', (write) => {
+      const fields: Record<string, ReturnType<typeof write>> = {};
+      for (let i = 0; i < this.length; i++) fields[i] = writeProperty(write, this, i, opt.elem);
+      return fields;
+    }, this.length);
     try {
       if (restored) {
+        if (Object.keys(restored.fields).length !== length) throw new TypeError('serialized array has missing fields');
         for (const key of Object.keys(restored.fields)) {
           Class.defineProperty(this, initialValue, keyPath, control, opt.elem, Number(key), true);
         }

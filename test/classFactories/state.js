@@ -5,6 +5,42 @@ var assert = require('assert');
 var M = require('../..');
 
 describe('state', function () {
+  it('exports only the winning fields, even when the winning delegate is filtered or defines behavior', function () {
+    const State = M.State([
+      {delegate: M({visible: 1, card: 'ace', move: 'secret move', hand: 'old hand'})},
+      {delegate: M({get card() { throw Error('do not invoke'); }, move() {}})},
+      {delegate: M({$scope: 'player', hand: 'new hand'})}
+    ]);
+    const state = State.createInstance();
+    const visited = [];
+    assert.deepStrictEqual(state.export(), {visible: 1, hand: 'new hand'});
+    const opponent = state.export((options, value, path, copy) => {
+      if (path.length) visited.push(value);
+      return options.scope === 'player' ? '$hidden' : copy();
+    });
+    assert.deepStrictEqual(opponent, {visible: 1});
+    assert.deepStrictEqual(visited, [1]);
+  });
+
+  it('preserves both the current score and the initializer for later state entries', function () {
+    const Game = M({enabled: false, phase: M.State([{
+      when() { return this.root.enabled; }, delegate: M({piece: {score: 1}, counters: [Number]})
+    }])});
+    const game = Game.createInstance({phase: {piece: {score: 9}, counters: [-0, NaN]}});
+    const fromInactive = Game.deserialize(game.serialize());
+    game.enabled = fromInactive.enabled = true;
+    assert.deepStrictEqual(fromInactive.export(), game.export());
+    game.phase.piece.score = 42;
+    const fromActive = Game.deserialize(game.serialize());
+    assert.strictEqual(fromActive.phase.piece.score, 42);
+    game.enabled = fromActive.enabled = false;
+    game.enabled = fromActive.enabled = true;
+    assert.strictEqual(fromActive.phase.piece.score, 9);
+    assert.deepStrictEqual(fromActive.export(), game.export());
+    assert.ok(Object.is(fromActive.phase.counters[0], -0));
+    assert.ok(Number.isNaN(fromActive.phase.counters[1]));
+  });
+
   it('round-trips a hierarchy with multiple top-level delegates', function () {
     const options = [
       {delegate: M({a: 1}), subState: [{delegate: M({b: 2})}]},

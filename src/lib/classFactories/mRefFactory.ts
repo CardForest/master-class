@@ -43,12 +43,13 @@ function mRefFactory(options?: Record<string, unknown> | null): RefFactory {
           if (!control.isChangeAllowed) {
             throw new Error('change is not allowed in this context');
           }
-          if (!(newValue instanceof MObject)) {
+          if (newValue !== null && !(newValue instanceof MObject)) {
             throw new TypeError('expected MObject');
           }
+          delete value.keyPath;
           value.ref = newValue;
           control.emit('change', 'setValue', {
-            newValue: { keyPath: newValue.keyPath.slice() }, trgKeyPath: keyPath, key
+            newValue: newValue === null ? null : { keyPath: newValue.keyPath.slice() }, trgKeyPath: keyPath, key
           }, opt);
         }
       };

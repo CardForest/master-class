@@ -9,6 +9,7 @@ import {
 import type Control = require('../utils/control');
 
 class MState {
+  static readonly modelKind = 'state';
   static createInstance = MObject.createInstance;
   static toPropertyDescriptor = MObject.toPropertyDescriptor;
   static handleRootObject = MObject.handleRootObject;
@@ -32,7 +33,7 @@ class MState {
     const { isRoot, keyPath, control } = Class.handleRootObject(this, value, _keyPath, _control, parent);
     const opt = Class.opt;
     const restored = RestoredModel.forKind(value, 'state');
-    const initialValue = restored ? undefined : value;
+    const initialValue = restored ? restored.seed : value;
     Object.defineProperty(this, control.rootPropertyName, {
       enumerable: false, configurable: false, value: rootOf(parent, this, control), writable: false
     });
@@ -46,7 +47,7 @@ class MState {
     control.addCleanup(this, () => Object.values(delegates).forEach((delegate) => control.dispose(delegate)));
     trackModel(this, 'state', (write) => Object.fromEntries(
       Object.entries(delegates).map(([idx, delegate]) => [idx, write(delegate)])
-    ));
+    ), undefined, initialValue);
 
     let oldProps: string[] = [];
     const updateDelegates = (saved?: RestoredModel) => {
@@ -128,14 +129,32 @@ class MState {
     if (!isRecord(instance.delegates)) {
       throw new TypeError('expected state');
     }
-    const res: Record<string, unknown> = {};
     const delegates = instance.delegates;
-    traverseStates(this.opt, ({ idx, delegate }) => {
+    const owners = new Map<string, number>();
+    const active: CompiledState[] = [];
+    traverseStates(this.opt, (state) => {
+      const { idx, delegate } = state;
       if (Object.hasOwn(delegates, idx)) {
-        Object.assign(res, overridableSnapshot(delegate, mapper, delegates[idx], keyPath));
+        active.push(state);
+        for (const key of Object.keys(delegate.props)) owners.set(key, idx);
       }
     });
-    return res;
+    const entries: [string, unknown][] = [];
+    for (const { idx, delegate } of active) {
+      const live = delegates[idx];
+      if (!isRecord(live)) throw new TypeError('expected state delegate');
+      const projected = mapper(delegate.opt, live, keyPath, () => Object.fromEntries(
+        Object.keys(live).filter((key) => owners.get(key) === idx).map((key) =>
+          [key, overridableSnapshot(delegate.props[key]!, mapper, live[key], keyPath.concat(key))])
+      ));
+      // Delegates are flattened, so a scalar replacement has no slot of its own.
+      if (isRecord(projected) && !Array.isArray(projected)) {
+        for (const entry of Object.entries(projected)) {
+          if (!owners.has(entry[0]) || owners.get(entry[0]) === idx) entries.push(entry);
+        }
+      }
+    }
+    return Object.fromEntries(entries);
   }
 }
 

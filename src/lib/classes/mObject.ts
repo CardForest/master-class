@@ -1,6 +1,6 @@
 import Control = require('../utils/control');
 import overridableSnapshot = require('../utils/overridableSnapshot');
-import { deserializeModel, RestoredModel, serializeModel, trackModel, writeProperty } from '../utils/modelData';
+import { deserializeModel, RestoredModel, RestoredReference, serializeModel, trackModel, writeProperty } from '../utils/modelData';
 import {
   isFactory, isRecord, rootOf,
   type ControlOptions, type Factory, type KeyPath, type Managed, type ObjectOptions, type SnapshotMapper
@@ -11,6 +11,7 @@ interface ConstructableFactory extends Factory {
 }
 
 class MObject {
+  static readonly modelKind = 'object';
   declare readonly keyPath: KeyPath;
   declare readonly control: Control;
   declare readonly root: object;
@@ -85,12 +86,12 @@ class MObject {
     const restored = RestoredModel.forKind(value, 'object');
     const initialValue = restored?.fields ?? (value == null ? {} : Object(value) as Record<string, unknown>);
     const props = Object.entries(opt.props);
-    if (restored && Object.keys(initialValue).some((key) => !Object.hasOwn(opt.props, key))) {
+    if (restored && (Object.keys(initialValue).length !== props.length ||
+        Object.keys(initialValue).some((key) => !Object.hasOwn(opt.props, key)))) {
       throw new TypeError('serialized fields do not match the model schema');
     }
     restored?.register(this);
     trackModel(this, 'object', (write) => Object.fromEntries(props
-      .filter(([key]) => Object.hasOwn(this, key))
       .map(([key, factory]) => [key, writeProperty(write, this, key, factory)])));
     try {
       props.forEach(([key, factory]) => {
@@ -168,9 +169,23 @@ class MObject {
       throw new Error('element in [' + keyPath.concat(key) + '] does not have a valid type');
     }
     const initialValue: unknown = Reflect.get(value, key);
+    if (restoring) {
+      const managed = 'modelKind' in propFactory;
+      const ref = 'isReference' in propFactory && propFactory.isReference === true;
+      if ((managed && (!(initialValue instanceof RestoredModel) || initialValue.kind !== propFactory.modelKind)) ||
+          (!managed && initialValue instanceof RestoredModel) ||
+          (ref && initialValue !== null && !(initialValue instanceof RestoredReference)) ||
+          (!ref && (initialValue === null || initialValue instanceof RestoredReference))) {
+        throw new TypeError('serialized field does not match the model schema');
+      }
+    }
     if (restoring ? Object.hasOwn(value, key) : initialValue !== '$hidden') {
       const instance = propFactory.createInstance(initialValue, keyPath.concat(key), control, self);
-      Object.defineProperty(self, key, propFactory.toPropertyDescriptor(instance, control, keyPath, key, self));
+      const descriptor = propFactory.toPropertyDescriptor(instance, control, keyPath, key, self);
+      if (restoring && !!descriptor.enumerable === (initialValue === undefined)) {
+        throw new TypeError('serialized field does not match the model schema');
+      }
+      Object.defineProperty(self, key, descriptor);
     }
   }
 

@@ -23,7 +23,34 @@ describe('snapshot', function () {
     model[0].label = '$hidden';
     const restored = Model.deserialize(model.serialize());
     assert.deepStrictEqual(restored.export(), [{label: '$hidden', number: NaN}]);
-    assert.throws(() => Model.deserialize('{"version":2}'), /unsupported serialized model data/);
+    assert.throws(() => Model.deserialize('{"version":3}'), /unsupported serialized model data/);
+  });
+
+  it('loads complete v1 saves but never returns a typed model from a partial save', function () {
+    const Game = M({piece: {score: Number}});
+    const legacy = {version: 1, root: {kind: 'object', id: 0, fields: {
+      piece: {kind: 'object', id: 1, fields: {score: 8}}
+    }}};
+    assert.strictEqual(Game.deserialize(JSON.stringify(legacy)).piece.score, 8);
+    for (const value of ['$hidden', 'placeholder']) {
+      assert.throws(() => Game.createInstance({piece: value}).serialize(), /projected model/);
+    }
+    legacy.root.fields.piece = 'placeholder';
+    assert.throws(() => Game.deserialize(JSON.stringify(legacy)), /schema/);
+    delete legacy.root.fields.piece;
+    assert.throws(() => Game.deserialize(JSON.stringify(legacy)), /schema/);
+  });
+
+  it('can transport a compatible hand projection without exposing opponent cards', function () {
+    const Game = M({players: [{hand: M.Array({defaultLength: 0, elem: M.Number({scope: 'player'})})}]});
+    const game = Game.createInstance({players: [{hand: [3]}, {hand: [7, 8]}]});
+    const wire = JSON.parse(JSON.stringify(game.export((options, _, path, copy) =>
+      options.scope === 'player' && path[1] !== 0 ? '$hidden' : copy())));
+    assert.deepStrictEqual(wire.players[1].hand, ['$hidden', '$hidden']);
+    const player = Game.createInstance(wire);
+    assert.strictEqual(player.players[0].hand[0], 3);
+    assert.deepStrictEqual(Object.keys(player.players[1].hand), []);
+    assert.throws(() => player.serialize(), /missing fields/);
   });
 
   it('copy object with primitive properties', function () {

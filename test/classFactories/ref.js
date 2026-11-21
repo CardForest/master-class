@@ -5,6 +5,20 @@ var assert = require('assert');
 var M = require('../..');
 
 describe('ref', function () {
+  it('clears a removed target and an unresolved key path before saving', function () {
+    const Game = M({piece: {score: 0}, selection: M.Ref()});
+    const game = Game.createInstance({selection: {keyPath: ['piece']}});
+    game.selection = null;
+    assert.strictEqual(game.selection, null);
+    game.selection = game.piece;
+    game.piece = {};
+    assert.throws(() => game.serialize(), /outside the current model/);
+    let change;
+    game.control.once('change', (_, payload) => { change = payload; });
+    game.selection = null;
+    assert.deepStrictEqual(change, {trgKeyPath: [], key: 'selection', newValue: null});
+    assert.strictEqual(Game.deserialize(game.serialize()).selection, null);
+  });
   it('accepts null options', function () {
     const o = M({r: M.Ref(null)}).createInstance();
     assert.strictEqual(o.r, null);
