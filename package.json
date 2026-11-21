@@ -1,7 +1,7 @@
 {
   "name": "master-class",
   "version": "0.7.0",
-  "description": "JavaScript classes with an edge.",
+  "description": "Stateful JavaScript models: share a view, save the full state.",
   "homepage": "https://github.com/CardForest/master-class",
   "author": {
     "name": "Amit Portnoy",

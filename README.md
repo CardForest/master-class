@@ -1,16 +1,13 @@
 # Master-Class
 
-> JavaScript classes with an edge.
+> Stateful JavaScript models: share a view, save the full state.
 
 
-This library provides a [class](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) [factory](https://en.wikipedia.org/wiki/Factory_%28object-oriented_programming%29). The instances of its generated classes have [many features](#Features) that will eventually allow them to:
-
-- Be distributively managed between machines
-- Be differently viewed in different contexts (e.g., depending on the viewer or an internal state)
-- Be efficiently stored
-- Keep precise track of their changes
-
- All while still feeling like plain JavaScript objects.
+Master-Class lets you define which fields and actions a JavaScript object has
+in each state. Export a filtered copy for a client, or serialize the full
+model to pick up where you left off. An approval workflow might show an
+applicant the decision without the reviewer's notes; a card game might show
+each player their hand without revealing anyone else's.
 
 #  [![NPM version][npm-image]][npm-url] [![Build Status][ci-image]][ci-url]
 
@@ -24,27 +21,25 @@ $ npm install master-class
 ```
 
 
-## Usage
+## Example: deal two cards, send one player's view
 
-0. Require the library
+```js
+const M = require('master-class');
+const Game = M({players: [{card: M.String({scope: 'owner'})}]});
+const game = new Game({players: [{card: 'Ace'}, {card: 'King'}]});
 
-    ```js
-    const M = require('master-class');
-    ```
-0. Create a new class:
+const view = game.export((options, value, path, copy) =>
+  options.scope === 'owner' && path[1] !== 0 ? 'face down' : copy()
+);
+console.log(JSON.stringify(view)); // {"players":[{"card":"Ace"},{"card":"face down"}]}
 
-    ```js
-    const MyMClass = M({/* options */});
-    ```
-0. Create an instance:
+const saved = game.serialize();    // Keep on the server, not in the player message.
+console.log(Game.deserialize(saved).players[1].card); // King
+```
 
-    ```js
-    const myInstance = new MyMClass();
-    ```
-    or
-    ```js
-      const myInstance = MyMClass.createInstance();
-    ```
+The mapper enforces the visibility rule; `scope` is your label, not a built-in
+permission. [Play through the reveal](docs/index.md) to see how `M.State`
+changes the available moves and how to restore the turn before the reveal.
 
 ## <a name="Features"></a>Features
 

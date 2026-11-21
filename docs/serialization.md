@@ -79,7 +79,8 @@ For example, a server can send a JSON-safe player export with `"$hidden"`
 in place of the opponent's cards. A client can display that data directly or
 initialize a compatible model from it. An absent property can take its schema
 default on construction; it is not the same as an explicit `"$hidden"`.
-This is not a game save, and arbitrary mapper results need not survive JSON.
+This initializes a client; it does not restore the original model. Arbitrary
+mapper results need not survive JSON.
 If a mapper replaces an entire **delegate** with a scalar, it contributes no
 fields: the delegate is flattened and has no property to hold the scalar.
 
@@ -119,7 +120,9 @@ replacement placeholders. `serialize()` and `deserialize()` reject those
 incomplete shapes rather than inventing data. References cannot point outside
 the current model: if a selected object leaves the model, assign `null` to its
 reference before saving. Saves contain private delegate values **and state
-initializers**; do not send them to players.
+initializers**; do not send them to players. For a history screen, keep
+server-side saves at turn boundaries, restore the requested turn, and export
+it for the requesting player. See the [card-round walkthrough](./index.md).
 
 **Format compatibility:** new saves use format 2. This reader also accepts
 complete 0.6.0 (format 1) saves. Those saves had no initializer data, so
