@@ -1,46 +1,73 @@
 import overridableSnapshot = require('../utils/overridableSnapshot');
 import Control = require('../utils/control');
 import MObject = require('./mObject');
-import { rootOf, type ArrayOptions, type KeyPath, type SnapshotMapper } from '../../types';
+import { RestoredModel, trackModel, writeProperty } from '../utils/modelData';
+import { rootOf, type ArrayOptions, type ControlOptions, type KeyPath, type Managed, type SnapshotMapper } from '../../types';
 
 class MArray extends Array<unknown> {
   static createInstance = MObject.createInstance;
   static toPropertyDescriptor = MObject.toPropertyDescriptor;
   static defineProperty = MObject.defineProperty;
+  static deserialize = MObject.deserialize;
+  declare readonly control: Control;
+  declare readonly keyPath: KeyPath;
+  declare readonly export: Managed['export'];
+  declare readonly serialize: Managed['serialize'];
+  declare readonly snapshot: Managed['snapshot'];
 
   static get opt(): ArrayOptions {
     throw new Error('MArray requires factory options');
   }
 
-  constructor(value?: unknown, keyPath?: KeyPath | null, control?: Control | null, parent?: object) {
+  constructor(value?: unknown, location?: KeyPath | Control | ControlOptions, owner?: Control, parent?: object) {
     super();
-    keyPath ??= [];
-    control ??= new Control();
     const Class = this.constructor as typeof MArray;
+    const { isRoot, keyPath, control } = MObject.handleRootObject.call(Class, this, value, location, owner, parent);
     const opt = Class.opt;
     Object.defineProperty(this, control.rootPropertyName, {
       enumerable: false, configurable: false, value: rootOf(parent, this, control), writable: false
     });
-    const initialValue = value == null ? [] : Object(value) as unknown[];
-    const length = value == null ? opt.defaultLength : initialValue.length;
+    Object.defineProperty(this, 'keyPath', { value: keyPath });
+    const restored = RestoredModel.forKind(value, 'array');
+    const initialValue = restored?.fields ?? (value == null ? [] : Object(value) as unknown[]);
+    const length = restored ? restored.length! : value == null ? opt.defaultLength : (initialValue as unknown[]).length;
     this.length = length;
-    for (let i = 0; i < length; i++) {
-      Class.defineProperty(this, initialValue, keyPath, control, opt.elem, i);
+    restored?.register(this);
+    trackModel(this, 'array', (write) => Object.fromEntries(Object.getOwnPropertyNames(this)
+      .filter((key) => /^(0|[1-9]\d*)$/.test(key) && Number(key) < this.length)
+      .map((key) => [key, writeProperty(write, this, key, opt.elem)])), this.length);
+    try {
+      if (restored) {
+        for (const key of Object.keys(restored.fields)) {
+          Class.defineProperty(this, initialValue, keyPath, control, opt.elem, Number(key), true);
+        }
+      } else {
+        for (let i = 0; i < length; i++) {
+          Class.defineProperty(this, initialValue, keyPath, control, opt.elem, i);
+        }
+      }
+      Object.freeze(this);
+      if (isRoot) control.emit('change');
+    } catch (error) {
+      control.dispose(this);
+      throw error;
     }
-    Object.freeze(this);
   }
 
   static get [Symbol.species](): ArrayConstructor {
     return Array;
   }
 
-  static snapshot(mapper: SnapshotMapper, instance: unknown, keyPath: KeyPath): unknown[] {
+  static snapshot(mapper: SnapshotMapper, instance: unknown, keyPath: KeyPath): unknown {
+    if (instance === null || typeof instance !== 'object') return instance;
     if (!Array.isArray(instance)) {
       throw new TypeError('expected array');
     }
-    const res: unknown[] = [];
+    const res: unknown[] = new Array(instance.length);
     for (let i = 0; i < instance.length; i++) {
-      res[i] = overridableSnapshot(this.opt.elem, mapper, instance[i], keyPath.concat(i));
+      if (Object.prototype.propertyIsEnumerable.call(instance, i)) {
+        res[i] = overridableSnapshot(this.opt.elem, mapper, instance[i], keyPath.concat(i));
+      }
     }
     return res;
   }

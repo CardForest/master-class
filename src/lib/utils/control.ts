@@ -11,6 +11,7 @@ class Control extends EventEmitter {
   isChangeAllowed = true;
   rootPropertyName = 'root';
   watchers: Watcher[] = [];
+  private readonly cleanups = new WeakMap<object, (() => void)[]>();
 
   constructor(opt?: ControlOptions) {
     super();
@@ -24,13 +25,31 @@ class Control extends EventEmitter {
     return mutator.apply(this, args);
   }
 
-  addWatcher(watcher: Watcher): void {
+  addWatcher(watcher: Watcher): () => void {
     this.watchers.push(watcher);
+    return () => {
+      const index = this.watchers.indexOf(watcher);
+      if (index !== -1) this.watchers.splice(index, 1);
+    };
+  }
+
+  addCleanup(owner: object, cleanup: () => void): void {
+    const cleanups = this.cleanups.get(owner);
+    if (cleanups) cleanups.push(cleanup);
+    else this.cleanups.set(owner, [cleanup]);
+  }
+
+  dispose(owner: unknown): void {
+    if (owner === null || typeof owner !== 'object') return;
+    const cleanups = this.cleanups.get(owner);
+    this.cleanups.delete(owner);
+    cleanups?.forEach((cleanup) => cleanup());
   }
 
   digest(): void {
     let dirty: boolean;
     const processWatcher = (watcher: Watcher) => {
+      if (!this.watchers.includes(watcher)) return;
       const newValue = watcher.watchFn();
       const oldValue = watcher.lastValue;
       if (!!oldValue !== !!newValue) {
@@ -41,7 +60,7 @@ class Control extends EventEmitter {
     };
     do {
       dirty = false;
-      this.watchers.forEach(processWatcher);
+      this.watchers.slice().forEach(processWatcher);
     } while (dirty);
   }
 }

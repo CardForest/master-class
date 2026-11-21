@@ -1,20 +1,26 @@
 import MState = require('../classes/mState');
-import traverseStates = require('../utils/traverseStates');
-import type { Factory, Managed, StateOptions } from '../../types';
+import type { CompiledState, ManagedClass, StateOptions } from '../../types';
 
-interface StateClass extends Factory<Record<string, unknown> & Managed> {
-  new(...args: ConstructorParameters<typeof MState>): Record<string, unknown> & Managed;
-  readonly opt: StateOptions[];
+interface StateClass extends ManagedClass<Record<string, unknown>> {
+  readonly opt: readonly StateOptions[];
 }
 
-function mStateFactory(opt: StateOptions[]): StateClass {
+function mStateFactory(opt: readonly StateOptions[]): StateClass {
   if (!Array.isArray(opt)) {
     throw new TypeError('expected objects array');
   }
   let currentIdx = 0;
-  traverseStates(opt, (state) => { state.idx = currentIdx++; });
+  const compile = (states: readonly StateOptions[]): CompiledState[] => states.map((state) => {
+    const idx = currentIdx++;
+    return {
+      ...state,
+      idx,
+      subState: compile(state.subState ?? [])
+    };
+  });
+  const states = compile(opt);
   return class extends MState {
-    static get opt() { return opt; }
+    static get opt() { return states; }
   } as StateClass;
 }
 

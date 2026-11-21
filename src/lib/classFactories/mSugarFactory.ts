@@ -38,8 +38,7 @@ function buildFactory(opt: unknown): Factory {
           throw new TypeError('expected object properties');
         }
         sugarProps = opt.props;
-        opt.props = {};
-        options = opt as ObjectOptions;
+        options = { ...opt, props: {} };
       } else {
         sugarProps = opt;
         options = { props: {} };

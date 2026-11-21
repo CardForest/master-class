@@ -124,34 +124,36 @@ describe('doc fragments', function () {
     );
 
     assert.deepEqual(
-      MyClass.createInstance(myInstance.snapshot()),
+      MyClass.createInstance(myInstance.export()),
       myInstance
     );
 
     assert.deepEqual(
-      myInstance.snapshot(
-        function (opt, instance, keyPath, snapshotFn) {
+      myInstance.export(
+        function (opt, instance, keyPath, copy) {
           if (keyPath[0] === 'n') {
             return 5;
           } else {
-            return snapshotFn();
+            return copy();
           }
         }
       ),
       {n: 5, s: 'test', b: true}
     );
 
-    myInstance = M({
+    const WithReference = M({
       r: M.Ref(),
       o: {
         n: Number
       }
-    }).createInstance();
+    });
+    myInstance = WithReference.createInstance();
     myInstance.r = myInstance.o;
 
-    const myInstanceCopy = new MyClass(myInstance.snapshot());
+    const myInstanceCopy = WithReference.deserialize(myInstance.serialize());
 
     assert.strictEqual(myInstanceCopy.r, myInstanceCopy.o);
+    assert.notStrictEqual(myInstanceCopy.r, myInstance.o);
   });
 
   it('state-pattern', function () {

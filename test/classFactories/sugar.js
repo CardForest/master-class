@@ -5,6 +5,18 @@ var assert = require('assert');
 var M = require('../..');
 
 describe('sugar', function () {
+  it('compiles reusable, frozen schema options without rewriting them', function () {
+    const props = Object.freeze({n: Number, $rootPropertyName: 'head'});
+    const options = Object.freeze({props, metadata: 'retained'});
+    const First = M(options);
+    const Second = M(options);
+    const first = First.createInstance();
+    assert.strictEqual(first.head, first);
+    assert.strictEqual(Second.createInstance().n, 0);
+    assert.strictEqual(First.opt.metadata, 'retained');
+    assert.strictEqual(options.props.n, Number);
+  });
+
   it('rejects unsupported schemas explicitly', function () {
     for (const schema of [null, undefined, Symbol('schema'), 1n, []]) {
       assert.throws(() => M(schema), TypeError);

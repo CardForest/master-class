@@ -7,6 +7,25 @@ var sinon = require('sinon');
 var M = require('..');
 
 describe('snapshot', function () {
+  it('exports a detached copy and keeps snapshot as an alias', function () {
+    const model = M({items: [{number: Number}]}).createInstance({items: [{number: 3}]});
+    const view = model.export();
+    assert.deepStrictEqual(view, model.snapshot());
+    view.items[0].number = 99;
+    assert.strictEqual(model.items[0].number, 3);
+    assert.deepStrictEqual(model.export((_options, _value, path, copy) =>
+      path[0] === 'items' ? 'hidden' : copy()), {items: 'hidden'});
+  });
+
+  it('round-trips a root array with model values that JSON alone would change', function () {
+    const Model = M([{label: String, number: Number}]);
+    const model = Model.createInstance([{number: NaN}]);
+    model[0].label = '$hidden';
+    const restored = Model.deserialize(model.serialize());
+    assert.deepStrictEqual(restored.export(), [{label: '$hidden', number: NaN}]);
+    assert.throws(() => Model.deserialize('{"version":2}'), /unsupported serialized model data/);
+  });
+
   it('copy object with primitive properties', function () {
     var o =
       M({
@@ -243,6 +262,7 @@ describe('snapshot', function () {
         ]}
     );
     assert.deepEqual(M(opt).createInstance(player0Snapshot), player0Snapshot);
+    assert.deepEqual(M(opt).createInstance(player0Snapshot).snapshot(), player0Snapshot);
   });
 
 });

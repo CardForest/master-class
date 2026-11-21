@@ -1,5 +1,6 @@
 import KeyPath = require('key-path');
 import MObject = require('../classes/mObject');
+import { RestoredReference } from '../utils/modelData';
 import { isRecord, type ReferenceValue, type RefFactory } from '../../types';
 
 function mRefFactory(options?: Record<string, unknown> | null): RefFactory {
@@ -8,7 +9,19 @@ function mRefFactory(options?: Record<string, unknown> | null): RefFactory {
     opt,
     isReference: true,
     createInstance(value) {
-      return value == null ? { ref: null } : value as ReferenceValue;
+      if (value == null) return { ref: null };
+      if (value instanceof RestoredReference) {
+        let resolve: (() => object) | undefined = value.target;
+        let assigned: object | null = null;
+        return {
+          get ref() { return resolve ? resolve() : assigned; },
+          set ref(ref) { resolve = undefined; assigned = ref ?? null; }
+        };
+      }
+      const reference = value as ReferenceValue;
+      return reference.keyPath === undefined
+        ? { ...reference }
+        : { ...reference, keyPath: reference.keyPath.slice() };
     },
     toPropertyDescriptor(initialValue, control, keyPath, key) {
       const value = initialValue as ReferenceValue;
@@ -35,13 +48,13 @@ function mRefFactory(options?: Record<string, unknown> | null): RefFactory {
           }
           value.ref = newValue;
           control.emit('change', 'setValue', {
-            newValue: { keyPath: newValue.keyPath }, trgKeyPath: keyPath, key
+            newValue: { keyPath: newValue.keyPath.slice() }, trgKeyPath: keyPath, key
           }, opt);
         }
       };
     },
     snapshot(_mapper, instance) {
-      return instance != null ? { keyPath: (instance as MObject).keyPath } : null;
+      return instance != null ? { keyPath: (instance as MObject).keyPath.slice() } : null;
     }
   };
 }

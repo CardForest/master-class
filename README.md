@@ -109,8 +109,13 @@ person.birthday(1);
 
 Primitive, object, array, getter, and mutator types are inferred from schemas.
 State properties are dynamic and exposed as `unknown`; narrow them before use.
-Snapshots also return `unknown`, because custom mappers can replace values with arbitrary data.
-Factory initialization accepts snapshot data and validates it at runtime.
+Only root models expose `control`, `export()` and `serialize()`. Managed arrays
+have writable elements but a fixed length per instance.
+Use `export(mapper?)` for a plain copy (formerly `snapshot()`), or
+`Model.deserialize(model.serialize())` for a full current-state round-trip.
+Exports return `unknown`: mapped exports can replace or omit fields, so
+`createInstance(data)` returns `unknown` when the input isn't known to match
+the schema. See the [serialization guide](docs/serialization.md).
 Unsupported schemas (including empty array schemas) throw `TypeError`.
 
 ## Development

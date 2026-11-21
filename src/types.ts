@@ -3,12 +3,13 @@ import type Control = require('./lib/utils/control');
 export type KeyPath = (string | number)[];
 export type ModelContext = Record<string, unknown>;
 export type ModelFunction = (...args: never[]) => unknown;
-export type SnapshotMapper = (
+export type ExportMapper = (
   options: unknown,
   instance: unknown,
   keyPath: KeyPath,
-  snapshot: () => unknown
+  copy: () => unknown
 ) => unknown;
+export type SnapshotMapper = ExportMapper;
 
 export interface Factory<T = unknown> {
   readonly opt?: unknown;
@@ -39,24 +40,56 @@ export interface ControlOptions {
   [key: string]: unknown;
 }
 
-export interface Managed {
-  readonly control: Control;
-  readonly root: object;
+interface ModelLocation {
+  readonly root?: object;
   readonly parent?: object;
-  readonly keyPath: KeyPath;
+  readonly keyPath: readonly (string | number)[];
+}
+
+export interface Managed extends ModelLocation {
+  readonly control: Control;
+  export(mapper?: ExportMapper): unknown;
+  serialize(): string;
+  /** @deprecated Use export() for a copy or serialize() for a full state round-trip. */
   snapshot(mapper?: SnapshotMapper): unknown;
 }
 
-export interface ModelClass<T extends object> extends Factory<T & Managed> {
-  readonly props: Record<string, Factory>;
-  createInstance(
-    value?: unknown, options?: KeyPath | Control | ControlOptions, control?: Control, parent?: object
-  ): T & Managed;
-  new(value?: unknown, options?: KeyPath | Control | ControlOptions, control?: Control, parent?: object): T & Managed;
+export type FixedArray<T> = Omit<ReadonlyArray<T>, number> & { [index: number]: T };
+
+type ModelInput<T> = T extends FixedArray<infer E> ? readonly ModelInput<E>[] :
+  T extends ModelFunction ? T :
+  T extends object ? { [K in keyof T as K extends keyof ModelLocation ? never : K]?: ModelInput<T[K]> } :
+  T;
+
+type HasHidden<T> = T extends '$hidden' ? true :
+  T extends readonly (infer E)[] ? HasHidden<E> :
+  T extends ModelFunction ? false :
+  T extends object ? { [K in keyof T]-?: HasHidden<T[K]> }[keyof T] :
+  false;
+type Unprojected<T> = true extends HasHidden<T> ? never : T;
+
+export interface ManagedClass<T extends object> extends Factory {
+  deserialize(data: string, options?: Control | ControlOptions): T & Managed;
+  createInstance(value?: null, options?: Control | ControlOptions): T & Managed;
+  createInstance<const I extends ModelInput<T>>(value: I & Unprojected<I>, options?: Control | ControlOptions): T & Managed;
+  createInstance(value: unknown, options?: KeyPath | Control | ControlOptions, control?: Control, parent?: object): unknown;
+  new(value?: null, options?: Control | ControlOptions): T & Managed;
+  new<const I extends ModelInput<T>>(value: I & Unprojected<I>, options?: Control | ControlOptions): T & Managed;
+  new(value: unknown, options?: Control | ControlOptions): object;
 }
 
-export interface ArrayClass<T> extends Factory<T[]> {
-  new(value?: unknown, keyPath?: KeyPath, control?: Control, parent?: object): T[];
+export interface ModelClass<T extends object> extends ManagedClass<T> {
+  readonly props: Record<string, Factory>;
+}
+
+export interface ArrayClass<T> extends Factory {
+  deserialize(data: string, options?: Control | ControlOptions): FixedArray<T> & Managed;
+  createInstance(value?: null, options?: Control | ControlOptions): FixedArray<T> & Managed;
+  createInstance<const I extends readonly ModelInput<T>[]>(value: I & Unprojected<I>, options?: Control | ControlOptions): FixedArray<T> & Managed;
+  createInstance(value: unknown, options?: KeyPath | Control | ControlOptions, control?: Control, parent?: object): unknown;
+  new(value?: null, options?: Control | ControlOptions): FixedArray<T> & Managed;
+  new<const I extends readonly ModelInput<T>[]>(value: I & Unprojected<I>, options?: Control | ControlOptions): FixedArray<T> & Managed;
+  new(value: unknown): object;
 }
 
 export interface ObjectOptions<P extends Record<string, Factory> = Record<string, Factory>> {
@@ -83,25 +116,34 @@ export interface MutatorOptions<F extends ModelFunction = ModelFunction, T = Mod
 }
 
 export interface StateOptions {
-  delegate: ModelClass<object> & { readonly props: Record<string, Factory> };
+  delegate: ModelClass<object>;
   when?: (this: ModelContext) => unknown;
-  subState?: StateOptions[];
-  idx?: number;
+  subState?: readonly StateOptions[];
+}
+
+export interface CompiledState extends StateOptions {
+  readonly idx: number;
+  readonly subState: readonly CompiledState[];
 }
 
 export type FactoryValue<F> = F extends GetterFactory<infer _T, infer R> ? R :
   F extends RefFactory ? object | null :
+  F extends ManagedClass<infer T> ? T & ModelLocation :
+  F extends ArrayClass<infer T> ? FixedArray<T> :
   F extends Factory<infer T> ? T : never;
 export type ObjectValue<P> = { [K in keyof P]: FactoryValue<P[K]> };
+type SugarFields<S> = SugarProperties<S extends { props: infer P } ? P : S>;
+type SugarProperties<S> = {
+  [K in keyof S as K extends `$${string}` ? never : K]: SugarValue<S[K]>
+};
 export type SugarValue<S> =
   S extends Factory ? FactoryValue<S> :
   S extends NumberConstructor | number ? number :
   S extends StringConstructor | string ? string :
   S extends BooleanConstructor | boolean ? boolean :
   S extends (...args: infer A) => infer R ? (...args: A) => R :
-  S extends readonly (infer E)[] ? SugarValue<E>[] :
-  S extends { props: infer P } ? SugarValue<P> :
-  S extends object ? { [K in keyof S as K extends `$${string}` ? never : K]: SugarValue<S[K]> } :
+  S extends readonly (infer E)[] ? FixedArray<SugarValue<E>> :
+  S extends object ? SugarFields<S> & ModelLocation :
   never;
 
 export type SugarFactory<S> = S extends Factory ? S :
@@ -109,7 +151,7 @@ export type SugarFactory<S> = S extends Factory ? S :
     ? Factory<SugarValue<S>> :
   S extends ModelFunction ? Factory<S> :
   S extends readonly (infer E)[] ? ArrayClass<SugarValue<E>> :
-  ModelClass<SugarValue<S> & object>;
+  ModelClass<SugarFields<S> & object>;
 
 export function isRecord(value: unknown): value is ModelContext {
   return value !== null && typeof value === 'object';

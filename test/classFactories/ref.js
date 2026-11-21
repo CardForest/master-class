@@ -24,6 +24,22 @@ describe('ref', function () {
     assert.strictEqual(restored.r.n, 7);
   });
 
+  it('restores independent references from the same immutable snapshot', function () {
+    const Model = M({r: M.Ref(), child: {n: Number}});
+    const source = Model.createInstance();
+    source.r = source.child;
+    const snapshot = source.snapshot();
+    assert.notStrictEqual(snapshot.r.keyPath, source.child.keyPath);
+    Object.freeze(snapshot.r);
+
+    const first = Model.createInstance(snapshot);
+    const second = Model.createInstance(snapshot);
+    assert.strictEqual(first.r, first.child);
+    assert.strictEqual(second.r, second.child);
+    assert.notStrictEqual(first.r, second.r);
+    assert.deepEqual(snapshot.r, {keyPath: ['child']});
+  });
+
   it('links with the referred object', function () {
     var opt = {
       props: {

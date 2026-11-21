@@ -56,7 +56,7 @@ person.birthday(1);
 ```
 
 Primitive, object, array, getter, and mutator types are inferred from schemas.
-State properties and snapshots are dynamic and exposed as `unknown`.
+State properties and exports are dynamic and exposed as `unknown`.
 
 ## Guides
 
