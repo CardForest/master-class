@@ -1,6 +1,6 @@
 {
   "name": "master-class",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Stateful JavaScript models: share a view, save the full state.",
   "homepage": "https://github.com/CardForest/master-class",
   "author": {

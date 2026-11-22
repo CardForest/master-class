@@ -41,16 +41,15 @@ The mapper enforces the visibility rule; `scope` is your label, not a built-in
 permission. [Play through the reveal](docs/index.md) to see how `M.State`
 changes the available moves and how to restore the turn before the reveal.
 
-## <a name="Features"></a>Features
+## <a name="Features"></a>How do I…?
 
-* [Run-time strict typing](docs/strict-typing.md)
-* [Fine-grained change control](docs/change-control.md)
-* [Serialization](docs/serialization.md)
-* [The state pattern](docs/state-pattern.md)
-
-## API Reference
-
-[WIP] For now, you could just read through the [tests](https://github.com/CardForest/master-class/tree/master/test).
+| Task | API | Guide |
+| --- | --- | --- |
+| Define a model and validate its fields | `M(schema)`, `new Model(data)` | [Strict typing](docs/strict-typing.md) |
+| Make a move available only in one phase | `M.State()`, `when`, `delegate` | [The state pattern](docs/state-pattern.md) |
+| Send a filtered view to a client | `model.export(mapper)` | [Export a copy](docs/serialization.md#export-a-copy) |
+| Save a checkpoint and resume it later | `model.serialize()`, `Model.deserialize(data)` | [Save and restore](docs/serialization.md#save-and-restore-current-state) |
+| Observe changes to a model or its children | `model.control.on('change', listener)` | [Change control](docs/change-control.md) |
 
 ## Documentation website
 

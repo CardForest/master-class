@@ -21,7 +21,7 @@ npm install master-class
 
 ## Model the round as a state machine
 
-```js
+```js title="card-round.js"
 const M = require('master-class');
 
 const Game = M({
@@ -47,7 +47,7 @@ to the players, not the phase, so they survive the transition.
 
 ## Send a view, not the server's save
 
-```js
+```js title="card-round.js"
 const game = new Game({players: [{card: 'Ace'}, {card: 'King'}]});
 
 function messageFor(game, seat) {
@@ -68,21 +68,61 @@ console.log(JSON.parse(messageFor(game, 1)).players); // [{card: 'face down'}, {
 
 `scope: 'owner'` is a label the mapper reads, not an automatic permission.
 On the server, choose the seat from the authenticated connection and send
-that connection its own message. The client can render the parsed JSON;
-it doesn't need the opponent's card or a live `Game` instance.
+that connection its own message. A spectator can render the JSON directly.
+A player can initialize a local model from this view and propose a move.
+
+## Send the player's change log back
+
+On the client, listen for writes while the player makes a move. In this round
+the reveal produces one write: `revealed` changes to `true`. The client sends
+that change, not its copy of the game (which has no idea what the other card is).
+
+```js title="card-round.js"
+const local = Game.createInstance(JSON.parse(message));
+const changes = [];
+function record(type, payload) {
+  if (type === 'setValue') {
+    changes.push({path: [...payload.trgKeyPath, payload.key], value: payload.newValue});
+  }
+}
+local.control.on('change', record);
+local.round.reveal();
+local.control.off('change', record);
+const proposal = JSON.stringify(changes); // [{"path":["revealed"],"value":true}]
+```
+
+The server treats the whole log as a proposal. In this example only seat 0
+may reveal, and only before showdown. Validate the entire log before applying
+anything; do not write to arbitrary client-supplied paths.
+
+```js title="card-round.js"
+function acceptReveal(game, seat, log) {
+  if (seat !== 0 || game.revealed || !Array.isArray(log) || log.length !== 1) return false;
+  const change = log[0];
+  if (!Array.isArray(change?.path) || change.path.length !== 1 ||
+      change.path[0] !== 'revealed' || change.value !== true) return false;
+  game.round.reveal();
+  return true;
+}
+```
+
+Here `seat` comes from the connection, not the log. The allowlist is the
+game's rule, not a permission system built into Master-Class. On rejection,
+send a fresh player view to replace the speculative local state.
 
 ## Keep turn history and resume a save
 
-```js
+```js title="card-round.js"
 const history = [game.serialize()]; // The deal, before the move.
-game.round.reveal();
-history.push(game.serialize());     // The completed move.
+const log = JSON.parse(proposal);
+console.log(acceptReveal(game, 1, log), game.revealed); // false false
+if (acceptReveal(game, 0, log)) history.push(game.serialize());
 
 console.log(game.round.label); // Showdown
 console.log(JSON.parse(messageFor(game, 0)).players); // [{card: 'Ace'}, {card: 'King'}]
 ```
 
-```js
+```js title="card-round.js"
 const resumed = Game.deserialize(history[1]);
 console.log(resumed.round.label); // Showdown
 

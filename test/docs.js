@@ -1,11 +1,33 @@
 'use strict';
 const { describe, it } = require('node:test');
+const { readFileSync } = require('node:fs');
+const { join } = require('node:path');
+const { compileFunction } = require('node:vm');
 
 var assert = require('assert');
 var M = require('..');
 
-// TODO automate this at som point
 describe('doc fragments', function () {
+  it('runs the Getting Started card round, including the view at the earlier checkpoint', function () {
+    const filename = join(__dirname, '..', 'docs', 'index.md');
+    const guide = readFileSync(filename, 'utf8');
+    const blocks = guide.matchAll(/^```js title="card-round\.js"\r?\n([\s\S]*?)^```\r?$/gm);
+    const program = Array.from(blocks, match => match[1]).join('\n');
+    const output = [];
+    compileFunction(program, ['require', 'console'], {filename})(name => {
+      assert.strictEqual(name, 'master-class');
+      return M;
+    }, {log: (...values) => output.push(...values)});
+
+    assert.deepStrictEqual(output, [
+      [{card: 'Ace'}, {card: 'face down'}],
+      [{card: 'face down'}, {card: 'King'}],
+      false, false,
+      'Showdown', [{card: 'Ace'}, {card: 'King'}],
+      'Showdown', 'function', 'face down'
+    ]);
+  });
+
   it('strict-typing', function () {
     const MyClass = M({
       str: String,
